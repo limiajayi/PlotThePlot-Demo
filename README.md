@@ -115,7 +115,7 @@ PlotThePlot is built on several core principles:
 
 This project follows **Agile methodology** with weekly sprints:
 
-Progress is tracked using [Notion workspace] and documented in regular sprint retrospectives.
+Progress is tracked using Notion workspace and documented in regular sprint retrospectives.
 
 ## 🤝 Contributing
 
