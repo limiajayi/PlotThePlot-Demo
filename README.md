@@ -36,7 +36,7 @@ This creates four quadrants:
 - 👥 Social features and friend comparisons
 - 📈 Aggregate coordinates showing community consensus
 - 🔍 Media search and discovery
-- 🎭 Separate plots based on media type (books, shows, movies, etc)
+- 🪄 Separate plots based on media type (books, shows, movies, etc)
 - 🎭 Rewatch tracking to see how opinions evolve
 
 ## 🚀 Quick Start
@@ -68,8 +68,6 @@ npm run dev
 # Start the development server (in another terminal)
 npm run dev
 ```
-
-Visit `http://localhost:3001` to see the PlotThePlot API!
 
 ## 🏗️ Tech Stack
 
@@ -132,7 +130,7 @@ Please open an issue to discuss any significant changes before submitting a pull
 
 ## 📝 API Documentation
 
-### Mock API Endpoints (json-server)
+### Mock API Endpoints
 
 **Get all ratings for a user:**
 ```
