@@ -1,8 +1,6 @@
 const express = require('express')
 const app = express()
 
-// helps to convert the request body into a JSON format
-app.use(express.json())
 
 // dummy data for what the API will possibly look like
 // could likely be more complicated than this
@@ -137,6 +135,21 @@ let ratings = [
     }
 ]
 
+//middleware for me to see what each request looks like
+//when testing with Postman
+const requestLogger = (request, response, next) => {
+    console.log('Method:', request.method)
+    console.log('Path:  ', request.path)
+    console.log('Body:  ', request.body)
+    console.log('---')
+    next()
+}
+
+// helps to convert the request body into a JSON format
+app.use(express.json())
+app.use(requestLogger)
+
+
 //API endpoint to get all users
 app.get('/api/users', (request, response) => {
     response.json(users)
@@ -152,6 +165,35 @@ app.get('/api/users/:id', (request, response) => {
     } else {
         response.status(404).end()
     }
+})
+
+app.put('/api/users/:id', (request, response) => {
+    // save the id of the user
+    // filter for the specific user
+    // get the body of the request
+    // if the user does not exist, return an error
+    // else create a new user object and add it to the existing users
+    const id = Number(request.params.id)
+    const user = users.find(user => user.id === Number(id))
+    const body = request.body
+
+    users = users.filter(user => user.id !== id)
+
+    if (!user) {
+        return response.status(404).json({
+            error: "This user does not exist."
+        })
+    }
+
+    const newUser = {
+        ...user,
+        "username": body.username,
+        "email": body.email,
+        "profile_picture": body.profile_picture,
+    }
+
+    users = users.concat(newUser)
+    response.json(newUser)
 })
 
 //API endpoint to get a specific user's ratings
@@ -206,6 +248,7 @@ app.get('/api/media/:id/ratings', (request, response) => {
         })
     }
 })
+
 
 
 
