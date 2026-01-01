@@ -95,6 +95,8 @@ PlotThePlot-Demo/
 ├── backend/
 │   ├── index.js           # Defines current API endpoints
 │   ├── package.json       # Project Dependencies
+│   ├── data/              # Contains the what the API should look like
+│   ├── routes/            # Routes for the API
 │   └── ...
 ├── assets/                # Contains images
 ├── frontend/              # Will contain future React + Typescript frontend
@@ -132,14 +134,57 @@ Please open an issue to discuss any significant changes before submitting a pull
 
 ### Mock API Endpoints
 
+**Get all users:**
+```
+GET  http://localhost:3001/api/users
+```
+
+**Get a specific user**
+```
+GET  http://localhost:3001/api/users/:id
+```
+
+**Modify a user**
+```
+PUT http://localhost:3001/api/users/:id
+
+{
+    "username": "newUser",
+    "email": "newUser@email.com",
+    "profile_picture": "new_profile_picture" 
+}
+```
+
+**Delete a user**
+```
+DELETE http://localhost:3001/api/users/:id
+```
+
 **Get all ratings for a user:**
 ```
-GET http://localhost:3001/api/user/id/ratings
+GET http://localhost:3001/api/users/:id/ratings
+```
+
+**Modify a user's ratings**
+```
+PUT http://localhost:3001/api/users/:userId/ratings/:ratingId
+
+{
+    "x_coordinate": x, # An integer between -1 and 1
+    "y_coordinate": y, # An integer between -1 and 1
+    "good_reason": "good reason",
+    "like_reason": "like reason",
+    "context": "new context",
+}
+```
+**Get all media**
+```
+GET http://localhost:3001/api/media
 ```
 
 **Get a specific media:**
 ```
-GET http://localhost:3001/api/media/id
+GET http://localhost:3001/api/media/:id
 ```
 
 **Get all ratings for a specific media**
