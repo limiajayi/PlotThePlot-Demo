@@ -150,6 +150,7 @@ app.use(express.json())
 app.use(requestLogger)
 
 
+
 //API endpoint to get all users
 app.get('/api/users', (request, response) => {
     response.json(users)
@@ -167,6 +168,7 @@ app.get('/api/users/:id', (request, response) => {
     }
 })
 
+//API endpoint to modify a specific user
 app.put('/api/users/:id', (request, response) => {
     // save the id of the user
     // filter for the specific user
@@ -174,7 +176,7 @@ app.put('/api/users/:id', (request, response) => {
     // if the user does not exist, return an error
     // else create a new user object and add it to the existing users
     const id = Number(request.params.id)
-    const user = users.find(user => user.id === Number(id))
+    const user = users.find(user => user.id === id)
     const body = request.body
 
     users = users.filter(user => user.id !== id)
@@ -197,7 +199,6 @@ app.put('/api/users/:id', (request, response) => {
 })
 
 //API endpoint to get a specific user's ratings
-// I don't think ALL ratings should be seen all at once
 app.get('/api/users/:id/ratings', (request, response) => {
     const id = Number(request.params.id)
     const userRatings = ratings.filter(rating => rating.user_id === id)
@@ -212,6 +213,41 @@ app.get('/api/users/:id/ratings', (request, response) => {
         })
     }
 })
+
+//API endpoint to modify a rating by user
+app.put('/api/users/:userId/ratings/:ratingId', (request, response) => {
+
+    const {userId, ratingId} = request.params
+    const rating = ratings.find(r => r.id === Number(ratingId))
+    const body = request.body
+
+    if (!rating) {
+        return response.status(404).json({
+            error: "This rating does not exist"
+        })
+    } else if (rating.user_id !== Number(userId)) {
+        return response.status(403).json({
+            error: "This is not your rating."
+        })
+    }
+
+    ratings = ratings.filter(r => r.id !== Number(ratingId))
+
+    const newRating = {
+        ...rating,
+        "x_coordinate": body.x_coordinate,
+        "y_coordinate": body.y_coordinate,
+        "good_reason": body.good_reason,
+        "like_reason": body.like_reason,
+        "context": body.context,
+        "watch_number": rating.watch_number + 1
+    }
+
+    ratings = ratings.concat(newRating)
+    response.json(newRating)
+})
+
+
 
 
 //API endpoint for all media
@@ -231,6 +267,33 @@ app.get('/api/media/:id', (request, response) => {
         response.status(404).end()
     }
 })
+
+//API endpoint to modify a piece of media
+app.put('/api/media/:id', (request, response) => {
+    const id = Number(request.params.id)
+    const medium = media.find(m => m.id === id)
+    const body = request.body
+
+    media = media.filter(m => m.id !== id)
+
+    if (!medium) {
+        return response.status(404).json({
+            error: "This piece of media does not exist."
+        })
+    }
+
+    const newMedium = {
+        ...medium,
+        "title": body.title,
+        "genre": body.genre,
+        "cover_image_url": body.cover_image_url,
+    }
+
+    media = media.concat(newMedium)
+    response.json(newMedium)
+})
+
+
 
 //API endpoint for the ratings of a specific media
 //TODO: Make a way to average every single rating for a specific medium
