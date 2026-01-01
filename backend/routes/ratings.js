@@ -18,6 +18,43 @@ router.get('/users/:id/ratings', (request, response) => {
     }
 })
 
+const generateId = (userId) => {
+    const userRatings = ratings.filter(rating => rating.id === userId)
+    const maxId = userRatings.reduce((max, rating) => rating.id > max ? rating.id : max, 0 )
+
+    return (maxId + 1)
+}
+
+//API endpoint to add a new rating by user
+router.post('/users/:id/ratings', (request, response) => {
+    const body = request.body
+    const id = request.params.id
+    const date = new Date()
+
+     // validate required fields
+    if (!body.media_id || !body.x_coordinate || !body.y_coordinate || !body.good_reason || !body.like_reason || !body.context) {
+        return response.status(400).json({
+            error: "Missing required fields: media_id, x_coordinate, y_coordinate, good_reason, like_reason, context"
+        })
+    }
+
+    const newRating = {
+        "id": generateId(id),
+        "user_id": id,
+        "media_id": body.media_id,
+        "x_coordinate": body.x_coordinate,
+        "y_coordinate": body.y_coordinate,
+        "good_reason": body.good_reason,
+        "like_reason": body.like_reason,
+        "context": body.context,
+        "watch_number": 1,
+        "created_at": date
+    }
+
+    ratings = ratings.concat(newRating)
+    response.status(201).json(newRating)
+})
+
 // API endpoint to modify a rating by user
 router.put('/users/:userId/ratings/:ratingId', (request, response) => {
     const {userId, ratingId} = request.params

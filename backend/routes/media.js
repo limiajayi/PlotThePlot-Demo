@@ -26,6 +26,52 @@ router.get('/:id', (request, response) => {
     }
 })
 
+// API endpoint for the ratings of a specific media
+router.get('/:id/ratings', (request, response) => {
+    const id = Number(request.params.id)
+    const mediaRatings = ratings.filter(rating => rating.media_id === id)
+
+    if (mediaRatings) {
+        return response.json(mediaRatings)
+    } else {
+        return response.status(404).json({
+            error: "This media does not exist."
+        })
+    }
+})
+
+
+router.post('/', (request, response) => {
+    const body = request.body
+
+     // Validating required fields
+    if (!body.title || !body.media_type || !body.release_year || !body.genre || !body.cover_image_url) {
+        return response.status(400).json({
+            error: "Missing required fields: title, media_type, release_year, genre, cover_image_url"
+        })
+    }
+
+    const existing = media.find(m => m.title === body.title && m.media_type === body.media_type && m.release_year === body.release_year)
+
+    if (existing) {
+        return response.status(409).json({
+            error: "This media already exists."
+        })
+    }
+
+    const newMedium = {
+        "id": generateId(),
+        "title": body.title,
+        "media_type": body.media_type,
+        "release_year": body.release_year,
+        "genre": body.genre,
+        "cover_image_url": body.cover_image_url
+    }
+
+    media = media.concat(newMedium)
+    response.status(201).json(newMedium)
+})
+
 // API endpoint to modify a piece of media
 router.put('/:id', (request, response) => {
     const id = Number(request.params.id)
@@ -51,19 +97,5 @@ router.put('/:id', (request, response) => {
     response.json(newMedium)
 })
 
-// API endpoint for the ratings of a specific media
-// TODO: Make a way to average every single rating for a specific medium
-router.get('/:id/ratings', (request, response) => {
-    const id = Number(request.params.id)
-    const mediaRatings = ratings.filter(rating => rating.media_id === id)
-
-    if (mediaRatings) {
-        return response.json(mediaRatings)
-    } else {
-        return response.status(404).json({
-            error: "This media does not exist."
-        })
-    }
-})
 
 module.exports = router
