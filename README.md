@@ -1,6 +1,6 @@
 # PlotThePlot 📊🎬
 
-> A media rating platform that captures the complexity of how we actually experience art and stories.
+A media rating platform that captures the complexity of how we actually experience art and stories.
 
 ![A two-dimensional scatter plot showing movies and books positioned on an X-Y coordinate grid. The horizontal axis represents quality, while the vertical axis represents personal enjoyment. Various media titles are plotted as points across the graph, with some clustered in the upper right quadrant (high quality, high enjoyment) and others scattered throughout other regions.](/assets/PTP-1.png)
 

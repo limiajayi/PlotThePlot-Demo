@@ -2,6 +2,21 @@ const express = require('express')
 const router = express.Router()
 let ratings = require('../data/ratings')
 
+const generateId = (userId) => {
+    const userRatings = ratings.filter(rating => rating.id === userId)
+    const maxId = userRatings.reduce((max, rating) => rating.id > max ? rating.id : max, 0 )
+
+    return (maxId + 1)
+}
+
+//API endpoint for searching ratings (especially in a list format)
+
+router.get('/users/:id/ratings', (request, response) => {
+    //basic searching
+    // For example: http://localhost:3001/api/users/:id/ratings?media_type=movie?quadrant=guilty-pleasure
+})
+
+
 // API endpoint to get a specific user's ratings
 router.get('/users/:id/ratings', (request, response) => {
     const id = Number(request.params.id)
@@ -18,12 +33,25 @@ router.get('/users/:id/ratings', (request, response) => {
     }
 })
 
-const generateId = (userId) => {
-    const userRatings = ratings.filter(rating => rating.id === userId)
-    const maxId = userRatings.reduce((max, rating) => rating.id > max ? rating.id : max, 0 )
 
-    return (maxId + 1)
-}
+router.get('/users/:userId/ratings/:ratingId', (request, response) => {
+    const {userId, ratingId} = request.params
+    const rating = ratings.find(r => r.id === Number(ratingId))
+    const body = request.body
+
+    if (!rating) {
+        return response.status(404).json({
+            error: "This rating does not exist"
+        })
+    } else if (rating.user_id !== Number(userId)) {
+        return response.status(403).json({
+            error: "This is not your rating."
+        })
+    }
+
+    response.json(rating)
+})
+
 
 //API endpoint to add a new rating by user
 router.post('/users/:id/ratings', (request, response) => {
@@ -86,5 +114,14 @@ router.put('/users/:userId/ratings/:ratingId', (request, response) => {
     ratings = ratings.concat(newRating)
     response.json(newRating)
 })
+
+//API endpoint to delete a user's rating
+router.delete('/users/:userId/ratings/:ratingId', (request, response) => {
+    const {userId, ratingId} = request.params
+    ratings = ratings.filter(r => r.id === Number(ratingId) && r.user_id === Number(userId))
+
+    response.status(204).end()
+})
+
 
 module.exports = router

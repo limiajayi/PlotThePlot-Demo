@@ -8,6 +8,26 @@ const generateId = () => {
     return (maxId + 1)
 }
 
+//API endpoint for searching media
+//basic search with a search type and media type
+//For example: http://localhost:3001/api/media?search=gladiator&type=movie
+router.get('/', (request, response) => {
+    const search = request.query.search?.toLowerCase()
+    const type = request.query.type
+
+    let results = media
+    
+    if (search) {
+        results = results.filter(m => m.title.toLowerCase().includes(search))
+    }
+
+    if (type) {
+        results = results.filter(m => m.media_type === type)
+    }
+
+    response.json(results)
+})
+
 // API endpoint for all media
 // TODO: could add a way to filter for media types
 router.get('/', (request, response) => {
@@ -95,6 +115,14 @@ router.put('/:id', (request, response) => {
 
     media = media.concat(newMedium)
     response.json(newMedium)
+})
+
+//API endpoint to delete a piece of media
+router.delete('/:id', (request, response) => {
+    const id = Number(request.params.id)
+    media = media.filter(m => m.id !== id)
+
+    response.status(204).end()
 })
 
 

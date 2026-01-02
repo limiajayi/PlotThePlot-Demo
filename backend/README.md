@@ -2,7 +2,7 @@
 
 A Node.js/Express API for managing media, users, and ratings for the PlotThePlot application.
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 backend/
@@ -34,7 +34,7 @@ The server will start on `http://localhost:3001`
 
 ## API Endpoints
 
-### Users
+###  Users
 - `GET /api/users` - Get all users
 - `GET /api/users/:id` - Get a specific user
 - `POST /api/users` - Create a new user
@@ -42,14 +42,14 @@ The server will start on `http://localhost:3001`
 - `DELETE /api/users/:id` - Delete a user
 - `GET /api/users/:id/ratings` - Get ratings for a user
 
-### Media
+### 🎦 Media
 - `GET /api/media` - Get all media
 - `GET /api/media/:id` - Get a specific media
 - `POST /api/media` - Create new media
 - `PUT /api/media/:id` - Update media
 - `GET /api/media/:id/ratings` - Get ratings for media
 
-### Ratings
+### 🪄 Ratings
 - `GET /api/users/:userId/ratings` - Get user's ratings
 - `PUT /api/users/:userId/ratings/:ratingId` - Update a rating
 
