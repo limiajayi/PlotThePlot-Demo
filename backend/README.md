@@ -1,4 +1,4 @@
-# PlotThePlot Backend
+# PlotThePlot Backend 🛠️🎬
 
 A Node.js/Express API for managing media, users, and ratings for the PlotThePlot application.
 
