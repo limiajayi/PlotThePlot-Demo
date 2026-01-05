@@ -10,10 +10,32 @@ const generateId = (userId) => {
 }
 
 //API endpoint for searching ratings (especially in a list format)
+//TODO: Create this
+
+//helper function
+
+const quadrants = (quadrant, ratings) => {
+    if (quadrant === "guilty-pleasure") {
+        return ratings.filter(r => r.x_coordinate < 0 && r.y_coordinate > 0)
+    } else if (quadrant === "amazing-media") {
+        return ratings.filter(r => r.x_coordinate > 0 && r.y_coordinate > 0)
+    } else if (quadrant === "dont-touch") {
+        return ratings.filter(r => r.x_coordinate < 0 && r.y_coordinate < 0)
+    } else {
+        return ratings.filter(r.x_coordinate > 0 && r.y_coordinate < 0)
+    }
+}
 
 router.get('/users/:id/ratings', (request, response) => {
-    //basic searching
-    // For example: http://localhost:3001/api/users/:id/ratings?media_type=movie?quadrant=guilty-pleasure
+    const quadrant = request.query.quadrant?.toLowerCase()  // http://localhost:3001/api/users/:id/ratings?quadrant=guilty-pleasure
+
+    let results = ratings
+
+    if (quadrant) {
+        results = quadrants(quadrant, results)
+    }
+
+    response.json(results)
 })
 
 
