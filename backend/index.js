@@ -3,6 +3,7 @@ const app = express()
 const usersRouter = require('./routes/users')
 const mediaRouter = require('./routes/media')
 const ratingsRouter = require('./routes/ratings')
+const cors = require('cors')
 
 //middleware for me to see what each request looks like
 //when testing with Postman
@@ -17,6 +18,7 @@ const requestLogger = (request, response, next) => {
 // helps to convert the request body into a JSON format
 app.use(express.json())
 app.use(requestLogger)
+app.use(cors())
 
 // Route handlers
 app.use('/api/users', usersRouter)
