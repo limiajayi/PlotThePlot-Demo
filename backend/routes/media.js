@@ -25,7 +25,23 @@ router.get('/', (request, response) => {
         results = results.filter(m => m.media_type === type)
     }
 
-    response.json(results)
+    const mediaWithRatings = results.map(media => {
+        const data = ratings.filter(r => r.media_id === media.id)
+        console.log(data)
+        return {
+            ...media,
+            ratings: data,
+            rating_count: data.length
+        }
+    })
+
+    if (mediaWithRatings || mediaWithRatings.length >= 0) {
+        return response.json(mediaWithRatings)
+    } else {
+        return response.status(404).json({
+            error: "This query does not exist."
+        })
+    }
 })
 
 // API endpoint for all media

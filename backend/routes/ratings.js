@@ -42,8 +42,16 @@ router.get('/users/:id/ratings', (request, response) => {
         })
     }
 
-    if (results || results.length >= 0) {
-        return response.json(results)
+    const ratingsWithMedia = results.map(rating => {
+        const mediaItem = media.find(m => m.id === rating.media_id)
+        return {
+            ...rating,
+            media: mediaItem
+        }
+    })
+
+    if (ratingsWithMedia || ratingsWithMedia.length >= 0) {
+        return response.json(ratingsWithMedia)
     } else {
         return response.status(404).json({
             error: "This user does not exist."

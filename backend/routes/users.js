@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router()
 let users = require('../data/users')
+let ratings = require('../data/ratings')
+let media = require('../data/media')
 
 //USERS
 
@@ -12,10 +14,22 @@ router.get('/', (request, response) => {
 //API endpoint to get a specific user
 router.get('/:id', (request, response) => {
     const id = Number(request.params.id)
-    const user = users.find(user => user.id === Number(id))
+    const user = users.find(user => user.id === id)
+
+    const userRatings = ratings.filter(r => r.user_id === id).map(rating => {
+        const mediaItem = media.find(m => m.id === rating.media_id)
+        return {
+            ...rating,
+            media: mediaItem
+        }
+    })
 
     if (user) {
-        return response.json(user)
+        return response.json({
+            ...user,
+            ratings: userRatings,
+            rating_count: userRatings.length
+        })
     } else {
         response.status(404).end()
     }
