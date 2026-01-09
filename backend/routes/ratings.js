@@ -27,9 +27,10 @@ const quadrants = (quadrant, ratings) => {
 }
 
 router.get('/users/:id/ratings', (request, response) => {
+    const id = Number(request.params.id)
     const quadrant = request.query.quadrant?.toLowerCase()  // http://localhost:3001/api/users/:id/ratings?quadrant=guilty-pleasure
 
-    let results = ratings
+    let results = ratings.filter(r => r.user_id === id)
 
     if (quadrant) {
         results = quadrants(quadrant, results)
