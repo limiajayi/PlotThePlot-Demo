@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 let ratings = require('../data/ratings')
+let media = require('../data/media')
 
 const generateId = (userId) => {
     const userRatings = ratings.filter(rating => rating.id === userId)
@@ -8,11 +9,6 @@ const generateId = (userId) => {
 
     return (maxId + 1)
 }
-
-//API endpoint for searching ratings (especially in a list format)
-//TODO: Create this
-
-//helper function
 
 const quadrants = (quadrant, ratings) => {
     if (quadrant === "guilty-pleasure") {
@@ -26,9 +22,12 @@ const quadrants = (quadrant, ratings) => {
     }
 }
 
+
 router.get('/users/:id/ratings', (request, response) => {
     const id = Number(request.params.id)
-    const quadrant = request.query.quadrant?.toLowerCase()  // http://localhost:3001/api/users/:id/ratings?quadrant=guilty-pleasure
+    const quadrant = request.query.quadrant?.toLowerCase()
+    const media_type = request.query.media_type?.toLowerCase()
+
 
     let results = ratings.filter(r => r.user_id === id)
 
@@ -36,7 +35,20 @@ router.get('/users/:id/ratings', (request, response) => {
         results = quadrants(quadrant, results)
     }
 
-    response.json(results)
+    if (media_type) {
+        results = results.filter(rating => {
+            const mediaItem = media.find(m => m.id === rating.media_id)
+            return mediaItem && mediaItem.media_type === media_type
+        })
+    }
+
+    if (results || results.length >= 0) {
+        return response.json(results)
+    } else {
+        return response.status(404).json({
+            error: "This user does not exist."
+        })
+    }
 })
 
 
@@ -44,8 +56,6 @@ router.get('/users/:id/ratings', (request, response) => {
 router.get('/users/:id/ratings', (request, response) => {
     const id = Number(request.params.id)
     const userRatings = ratings.filter(rating => rating.user_id === id)
-
-    console.log(userRatings)
 
     if (userRatings) {
         return response.json(userRatings)
