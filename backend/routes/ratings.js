@@ -10,6 +10,12 @@ const generateId = (userId) => {
     return (maxId + 1)
 }
 
+// takes in ratings objects and filters them based on the different quadrants
+// amazing media -> x positive y positive
+// guilty pleasure -> x negative y positive
+// good but not for me -> x positive y negative
+// dont touch -> x negative y negative
+
 const quadrants = (quadrant, ratings) => {
     if (quadrant === "guilty-pleasure") {
         return ratings.filter(r => r.x_coordinate < 0 && r.y_coordinate > 0)
@@ -22,27 +28,21 @@ const quadrants = (quadrant, ratings) => {
     }
 }
 
-
 router.get('/users/:id/ratings', (request, response) => {
+    // this is used to get a user's ratings alongside query parameters
+    // for example:  http://localhost:3001/api/users/:userId/ratings
+    // query:        http://localhost:3001/api/users/:userId/ratings?title=avengers&media_type=movie
+
     const id = Number(request.params.id)
+    const title = request.query.title?.toLowerCase()
     const quadrant = request.query.quadrant?.toLowerCase()
     const media_type = request.query.media_type?.toLowerCase()
 
-
     let results = ratings.filter(r => r.user_id === id)
 
-    if (quadrant) {
-        results = quadrants(quadrant, results)
-    }
-
-    if (media_type) {
-        results = results.filter(rating => {
-            const mediaItem = media.find(m => m.id === rating.media_id)
-            return mediaItem && mediaItem.media_type === media_type
-        })
-    }
-
-    const ratingsWithMedia = results.map(rating => {
+    // changing each rating object to also include their equivalent media objects
+    // like a join on ratings and media
+    results = results.map(rating => {
         const mediaItem = media.find(m => m.id === rating.media_id)
         return {
             ...rating,
@@ -50,8 +50,27 @@ router.get('/users/:id/ratings', (request, response) => {
         }
     })
 
-    if (ratingsWithMedia || ratingsWithMedia.length >= 0) {
-        return response.json(ratingsWithMedia)
+    // searching ratings by quadrant
+    if (quadrant) {
+        results = quadrants(quadrant, results)
+    }
+
+    // searching ratings by media type
+    if (media_type) {
+        results = results.filter(rating => rating.media?.media_type === media_type)
+    }
+
+    // searching ratings by title
+    if (title) {
+        results = results.filter(r => {
+            return r.media?.title.toLowerCase().includes(title)
+        })
+    }
+
+    // if results exist, return their json format
+    // else return status code 404: not found
+    if (results || results.length >= 0) {
+        return response.json(results)
     } else {
         return response.status(404).json({
             error: "This user does not exist."
@@ -60,19 +79,19 @@ router.get('/users/:id/ratings', (request, response) => {
 })
 
 
-// API endpoint to get a specific user's ratings
-router.get('/users/:id/ratings', (request, response) => {
-    const id = Number(request.params.id)
-    const userRatings = ratings.filter(rating => rating.user_id === id)
+// // API endpoint to get a specific user's ratings
+// router.get('/users/:id/ratings', (request, response) => {
+//     const id = Number(request.params.id)
+//     const userRatings = ratings.filter(rating => rating.user_id === id)
 
-    if (userRatings) {
-        return response.json(userRatings)
-    } else {
-        return response.status(404).json({
-            error: "This user does not exist."
-        })
-    }
-})
+//     if (userRatings) {
+//         return response.json(userRatings)
+//     } else {
+//         return response.status(404).json({
+//             error: "This user does not exist."
+//         })
+//     }
+// })
 
 
 router.get('/users/:userId/ratings/:ratingId', (request, response) => {

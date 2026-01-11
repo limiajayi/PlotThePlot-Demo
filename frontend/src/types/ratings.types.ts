@@ -1,3 +1,5 @@
+import { type Media } from "./media.types";
+
 export type Ratings = {
     id: number;
     user_id: number;
@@ -9,4 +11,5 @@ export type Ratings = {
     context?: string;
     watch_number?: number;
     created_at: string;
+    media: Media
 }

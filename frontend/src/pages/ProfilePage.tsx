@@ -1,38 +1,32 @@
-import { useEffect, useState} from 'react';
-import { type Ratings } from '../types/ratings.types';
-import { type User } from '../types/user.types';
-import { useParams } from 'react-router-dom';
+// import { useEffect, useState} from 'react';
+// import { type User } from '../types/user.types';
+import RatingsList from '../rating/RatingsList';
+import RatingSearch from '../rating/RatingsSearch';
 // import * as d3 from 'd3';
 
 
 const ProfilePage = () => {
-    const { userId } = useParams<{ userId: string }>();
-    const [user, setUser] = useState<User>()
-    const [ratings, setRatings] = useState<Ratings[]>([]);
+    // const { userId } = useParams<{ userId: string }>();
+    // const [user, setUser] = useState<User>()
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        const fetchRatings = async () => {
-        const response = await fetch(`http://localhost:3001/api/users/${userId}/ratings`);
-        const userResponse = await fetch(`http://localhost:3001/api/users/${userId}`)
+    //     const fetchRatings = async () => {
+    //     const userResponse = await fetch(`http://localhost:3001/api/users/${userId}`);
+    //     const userData = await userResponse.json();
 
-        const data = await response.json();
-        const userData = await userResponse.json()
+    //     setUser(userData);
+    //     };
 
-        setRatings(data);
-        setUser(userData)
-        };
-
-        fetchRatings();
-    }, [userId]);
+    //     fetchRatings();
+    // }, [userId]);
     
     return (
         <div>
-            <h1>PlotThePlot Ratings for {user?.username}</h1>
-            <p>Found {ratings.length} ratings</p>
-            <pre>{JSON.stringify(ratings, null, 2)}</pre>
+            <RatingSearch />
+            <RatingsList />
         </div>
-    )
+    );
 }
 
-export default ProfilePage
+export default ProfilePage;
