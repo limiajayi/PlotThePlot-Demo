@@ -1,8 +1,9 @@
 // import { useEffect, useState} from 'react';
 // import { type User } from '../types/user.types';
+// import * as d3 from 'd3';
 import RatingsList from '../rating/RatingsList';
 import RatingSearch from '../rating/RatingsSearch';
-// import * as d3 from 'd3';
+
 
 
 const ProfilePage = () => {

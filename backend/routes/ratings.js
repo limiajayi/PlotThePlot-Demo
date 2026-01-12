@@ -17,15 +17,10 @@ const generateId = (userId) => {
 // dont touch -> x negative y negative
 
 const quadrants = (quadrant, ratings) => {
-    if (quadrant === "guilty-pleasure") {
-        return ratings.filter(r => r.x_coordinate < 0 && r.y_coordinate > 0)
-    } else if (quadrant === "amazing-media") {
-        return ratings.filter(r => r.x_coordinate > 0 && r.y_coordinate > 0)
-    } else if (quadrant === "dont-touch") {
-        return ratings.filter(r => r.x_coordinate < 0 && r.y_coordinate < 0)
-    } else {
-        return ratings.filter(r.x_coordinate > 0 && r.y_coordinate < 0)
-    }
+    if (quadrant === "amazing") return ratings.filter(r => r.x_coordinate > 0 && r.y_coordinate > 0)
+    if (quadrant === "guilty-pleasure") return ratings.filter(r => r.x_coordinate < 0 && r.y_coordinate > 0)
+    if (quadrant === "dont-touch") return ratings.filter(r => r.x_coordinate < 0 && r.y_coordinate < 0)
+    if (quacrant === "great-not-for-me") return ratings.filter(r.x_coordinate > 0 && r.y_coordinate < 0)
 }
 
 router.get('/users/:id/ratings', (request, response) => {
