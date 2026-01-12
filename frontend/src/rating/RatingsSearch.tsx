@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 type SearchFilters = {
     title: string;
@@ -8,7 +8,6 @@ type SearchFilters = {
 }
 
 const RatingSearch = () => {
-    const { userId } = useParams<{ userId: string }>(); // for the ratings of the user 
     const [searchParams, setSearchParams] = useSearchParams(); // for what's in the search bar eg '/user/1/profile?title=gladiator&media_type=movie'
 
     // gets current filters from url
