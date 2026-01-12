@@ -1,14 +1,15 @@
 import { useEffect, useState} from 'react';
-import { type Ratings } from '../types/ratings.types';
-import { type User } from '../types/user.types';
+import { type Ratings } from '../../types/ratings.types';
+import { type User } from '../../types/user.types';
 import { useParams, useSearchParams } from 'react-router-dom';
 
+type RatingsListProps = {
+    user: User;
+}
 
-
-const RatingsList = () => {
+const RatingsList = ({ user }: RatingsListProps) => {
     const { userId } = useParams<{ userId: string }>();
     const [searchParams] = useSearchParams();
-    const [user, setUser] = useState<User>()
     const [ratings, setRatings] = useState<Ratings[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -19,15 +20,10 @@ const RatingsList = () => {
             try {
                 // while loading, set loading to be true
                 setLoading(true);
-                const baseUrl = `http://localhost:3001/api/users/${userId}`
-
-                const userResponse = await fetch(baseUrl);
-                const userData = await userResponse.json();
-                setUser(userData);
-
+                const baseUrl = `http://localhost:3001/api/users/${userId}/ratings`
                 const queryString = searchParams.toString();
 
-                const ratingsResponse = await fetch(queryString ? `${baseUrl}/ratings?${queryString}` : `${baseUrl}/ratings`);
+                const ratingsResponse = await fetch(queryString ? `${baseUrl}?${queryString}` : `${baseUrl}`);
                 const data = await ratingsResponse.json();
                 setRatings(data);
             } catch (error) {
@@ -37,7 +33,7 @@ const RatingsList = () => {
             }
         };
 
-        fetchRatings();
+        if (userId) fetchRatings();
     }, [searchParams, userId]);
 
     if (loading) return <div>Loading....</div>
@@ -49,7 +45,7 @@ const RatingsList = () => {
 
             {ratings.map(rating => (
                 <div key={rating.id}>
-                    {rating.media.title}  ( {rating.x_coordinate} , {rating.y_coordinate} )
+                    {rating.media.title}  ({rating.x_coordinate} , {rating.y_coordinate})
                 </div>
             ))}
             
