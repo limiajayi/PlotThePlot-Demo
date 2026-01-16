@@ -48,11 +48,13 @@ describe('Users Router', () => {
                 .get('/api/users/1')
                 .expect(200)
             
-            expect(response.body).toEqual(mockUsers[0])
+            // expect(response.body).toEqual(mockUsers[0])
+            // the above code doesn't hold anymore because i changed users to return ratings + media too!
             expect(response.body.id).toBe(1)
             expect(response.body.username).toBe('john_doe')
         })
 
+        //for a different user within the API
         it('should return a different user by id', async () => {
             const response = await request(app)
                 .get('/api/users/2')
@@ -62,6 +64,7 @@ describe('Users Router', () => {
             expect(response.body.username).toBe('jane_smith')
         })
 
+        //for  a non-existent user
         it('should return 404 for non-existent user', async () => {
             await request(app)
                 .get('/api/users/999')
@@ -77,6 +80,7 @@ describe('Users Router', () => {
         })
     })
 
+    //TODO: Change PUT requests to include a ratings array within them
     describe('PUT /api/users/:id', () => {
         it('should update a user successfully', async () => {
             const updatedData = {
@@ -142,6 +146,7 @@ describe('Users Router', () => {
         })
     })
 
+    // to delete a user
     describe('DELETE /api/users/:id', () => {
         it('should delete a user and return 204', async () => {
             await request(app)

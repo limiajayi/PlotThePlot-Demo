@@ -6,6 +6,9 @@ let media = require('../data/media')
 
 //USERS
 
+//TODO: Change PUT requests to include a ratings array
+//TODO: Change POST requests to include a ratings array
+
 //API endpoint to get all users
 router.get('/', (request, response) => {
     response.json(users)
