@@ -99,7 +99,11 @@ PlotThePlot-Demo/
 │   ├── routes/            # Routes for the API
 │   └── ...
 ├── assets/                # Contains images
-├── frontend/              # Will contain future React + Typescript frontend
+├── frontend/              # Contains React + Typescript frontend
+│   ├── src/               # frontend files ( ratings, hooks, media, pages, styling  )
+│   │   ├── App.tsx        # Routes for now
+│   │   └── ...
+│   └── ...
 ```
 ## 🎨 Design Philosophy
 

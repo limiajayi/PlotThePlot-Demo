@@ -8,10 +8,10 @@ type RatingsListProps = {
 }
 
 const RatingsList = ({ user }: RatingsListProps) => {
-    const { userId } = useParams<{ userId: string }>();
-    const [searchParams] = useSearchParams();
-    const [ratings, setRatings] = useState<Ratings[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { userId } = useParams<{ userId: string }>(); // userId gotten from the url, used to query the API for a user's ratings
+    const [searchParams] = useSearchParams();          // searchParams gotten from the url, used to query a user's ratings by type, quadrant, etc
+    const [ratings, setRatings] = useState<Ratings[]>([]);   // ratings object 
+    const [loading, setLoading] = useState(true);     // loading is either true or false for better ux
 
     useEffect(() => {
 
@@ -27,7 +27,7 @@ const RatingsList = ({ user }: RatingsListProps) => {
                 const data = await ratingsResponse.json();
                 setRatings(data);
             } catch (error) {
-                console.log('Error', error);
+                console.log('Error: ', error);
             } finally {
                 setLoading(false);
             }
