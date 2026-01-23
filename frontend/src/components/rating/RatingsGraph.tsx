@@ -1,9 +1,7 @@
-//import { useParams, useSearchParams } from "react-router-dom";
 import type { User } from "../../types/user.types";
 import { ErrorBoundary } from "react-error-boundary";
-//import { useEffect, useState } from "react";
-//import type { Ratings } from "../../types/ratings.types";
 import useRatings from "../../hooks/useRatings";
+import ScatterPlot from "./ScatterPlot";
 
 type RatingsGraphProps = {
     user: User;
@@ -32,7 +30,7 @@ const RatingsGraph = ({ user }: RatingsGraphProps) => {
         <ErrorBoundary FallbackComponent={ErrorFallback}>
             <div>
                 <h2>Graph for {user?.username}</h2>
-                
+                <ScatterPlot data={ratings} />
             </div>
         </ErrorBoundary>
     );
