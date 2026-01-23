@@ -101,7 +101,9 @@ router.post('/', (request, response) => {
         "media_type": body.media_type,
         "release_year": body.release_year,
         "genre": body.genre,
-        "cover_image_url": body.cover_image_url
+        "cover_image_url": body.cover_image_url,
+        "ratings": [],
+        "rating_count": 0,
     }
 
     media = media.concat(newMedium)
@@ -127,6 +129,8 @@ router.put('/:id', (request, response) => {
         "title": body.title,
         "genre": body.genre,
         "cover_image_url": body.cover_image_url,
+        "ratings": body.ratings,
+        "ratings_count": body.ratings.length,
     }
 
     media = media.concat(newMedium)

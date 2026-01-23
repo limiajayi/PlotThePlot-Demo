@@ -62,6 +62,8 @@ router.put('/:id', (request, response) => {
         "username": body.username,
         "email": body.email,
         "profile_picture": body.profile_picture,
+        "ratings": body.ratings,
+        "rating_count": body.rating_count,
     }
 
     users = users.concat(newUser)
