@@ -88,6 +88,42 @@ const ScatterPlot = ({ data }: ScatterPlotProps) => {
         .attr('opacity', 0.5)
         .text(d => d.label)
 
+        // draw axes
+        // ticks shows how many dividers there are on the line
+        // in this case, 5
+        const xAxis = d3.axisBottom(xScale).ticks(5); 
+        const yAxis = d3.axisLeft(yScale).ticks(5);
+
+        // X-axis at y=0 (at the center)
+        g.append('g')
+        .attr('class', 'x-axis')
+        .attr('transform', `translate(0, ${yScale(0)})`)
+        .call(xAxis)
+        .style('stroke-width', 1);
+
+        // Y-axis at x=0 (at the center)
+        g.append('g')
+        .attr('class', 'y-axis')
+        .attr('transform', `translate(${xScale(0)}, 0)`) // switched because positive y goes down but ptp's positive y goes up
+        .call(yAxis)
+        .style('stroke-width', 1);
+
+        // adding axis labels
+        g.append('text')
+        .attr('x', innerWidth)
+        .attr('y', yScale(0) - 10)
+        .attr('text-anchor', 'end')
+        .attr('font-size', '12px')
+        .attr('font-weight', 'light')
+        .text('Good');
+
+        g.append('text')
+        .attr('x', xScale(0) + 10)
+        .attr('y', 15)
+        .attr('text-anchor', 'start')
+        .attr('font-size', '12px')
+        .attr('font-weight', 'light')
+        .text('Liked It');
 
 
     }, [data])
