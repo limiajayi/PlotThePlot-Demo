@@ -58,13 +58,13 @@ const ScatterPlot = ({ data }: ScatterPlotProps) => {
         .range([innerHeight, 0])
 
         const quadrants: Quadrant[] = [
-            { x: 0, y: 0, width: innerWidth / 2, height: innerHeight / 2, label: "Overhated",  color: "#fec789"},
-            { x: innerWidth / 2, y: 0, width: innerWidth / 2, height: innerHeight / 2, label: "Over",  color: "#94fd9d"},
-            { x: 0, y: innerHeight / 2, width: innerWidth / 2, height: innerHeight / 2, label: "Under",  color: "#ffa5a5"},
-            { x: innerWidth / 2, y: innerHeight / 2, width: innerWidth / 2, height: innerHeight / 2, label: "Overrated",  color:"#94a7f3"},
+            { x: 0, y: 0, width: innerWidth / 2, height: innerHeight / 2, label: "overhated",  color: "#fec789"},
+            { x: innerWidth / 2, y: 0, width: innerWidth / 2, height: innerHeight / 2, label: "over",  color: "#94fd9d"},
+            { x: 0, y: innerHeight / 2, width: innerWidth / 2, height: innerHeight / 2, label: "under",  color: "#ffa5a5"},
+            { x: innerWidth / 2, y: innerHeight / 2, width: innerWidth / 2, height: innerHeight / 2, label: "overrated",  color:"#94a7f3"},
         ]
 
-        // drawing quadrants
+        // DRAWING BACKGROUND QUADRANTS
         g.selectAll('.quadrant')
         .data(quadrants)
         .enter()
@@ -75,7 +75,7 @@ const ScatterPlot = ({ data }: ScatterPlotProps) => {
         .attr('width', d => d.width)
         .attr('height', d => d.height)
         .attr('fill', d => d.color)
-        .attr('opacity', 0.4)
+        .attr('opacity', 0.8);
 
         // quadrant labels
         g.selectAll('.quadrant-label')
@@ -83,12 +83,16 @@ const ScatterPlot = ({ data }: ScatterPlotProps) => {
         .enter()
         .append('text')
         .attr('class', 'quadrant-label')
-        .attr('x', d => d.x + d.width / 3)
+        .attr('x', d => d.x + d.width / 2)
         .attr('y', d => d.y + d.height / 2)
-        .attr('opacity', 0.5)
-        .text(d => d.label)
+        .attr('text-anchor', 'middle')
+        .attr('dominant-baseline', 'middle')
+        .attr('font-size', '12px')
+        .style('fill', '#666')
+        .style('font-weight', '500')
+        .text(d => d.label);
 
-        // draw axes
+        // DRAW AXES
         // ticks shows how many dividers there are on the line
         // in this case, 5
         const xAxis = d3.axisBottom(xScale).ticks(5); 
@@ -109,21 +113,108 @@ const ScatterPlot = ({ data }: ScatterPlotProps) => {
         .style('stroke-width', 1);
 
         // adding axis labels
+        // good
         g.append('text')
-        .attr('x', innerWidth)
-        .attr('y', yScale(0) - 10)
+        .attr('x', innerWidth - 5)
+        .attr('y', yScale(0) - 10) //  positioned at (1, 0.1)
         .attr('text-anchor', 'end')
         .attr('font-size', '12px')
-        .attr('font-weight', 'light')
-        .text('Good');
+        .attr('font-weight', '500')
+        .style('fill', '#666')
+        .text('good');
 
+        //bad
+        g.append('text')
+        .attr('x', 5)
+        .attr('y', yScale(0) - 10)  //  positioned at (-1, 0.1)
+        .attr('text-anchor', 'start')
+        .attr('font-size', '12px')
+        .attr('font-weight', '500')
+        .style('fill', '#666')
+        .text('bad');
+
+        // liked it
         g.append('text')
         .attr('x', xScale(0) + 10)
         .attr('y', 15)
         .attr('text-anchor', 'start')
         .attr('font-size', '12px')
-        .attr('font-weight', 'light')
-        .text('Liked It');
+        .attr('font-weight', '500')
+        .style('fill', '#666')
+        .text('liked It');
+
+        // disliked it
+        g.append('text')
+        .attr('x', xScale(0) + 10)
+        .attr('y', innerHeight - 5) // so the text does not get cutoff
+        .attr('text-anchor', 'start')
+        .attr('font-size', '12px')
+        .attr('font-weight', '500')
+        .style('fill', '#666')
+        .text('disliked It');
+
+        // DRAWING THE RATINGS
+        const colorScale = d3.scaleOrdinal<string>()
+        .domain(['movie', 'book', 'show'])
+        .range(['#2196F3', '#4CAF50', '#FF9800']);
+
+        const circles = g.selectAll<SVGCircleElement, Ratings>('.dot')
+        .data(data)
+        .enter()
+        .append('circle')
+        .attr('class', 'dot')
+        .attr('cx', d => xScale(d.x_coordinate))
+        .attr('cy', d => yScale(d.y_coordinate))
+        .attr('r', 8)
+        .attr('fill', d => colorScale(d.media.media_type))
+        .attr('stroke-width', 2)
+        .style('cursor', 'pointer')
+        .style('opacity', 0.8)
+
+        // ADD INTERACTIVITY
+        // when you hover over a rating dot
+        // the radius increases and it gets darker
+        circles.on('mouseenter', function() {
+            d3.select(this as SVGCircleElement)
+            .transition()
+            .duration(200)
+            .attr('r', 12)
+            .style('opacity', 1);
+        }).on('mouseleave', function() {
+            // when you leave the rating dot
+            // it returns back to normal radius and opacity
+            d3.select(this as SVGCircleElement)
+            .transition()
+            .duration(200)
+            .attr('r', 8)
+            .style('opacity', 0.8)
+        })
+
+        // TOOLTIP : To see movie name and coordinates!
+        const tooltip = d3.select('body')
+        .append('div')
+        .style('position', 'absolute')
+        .style('background', 'rgba(0, 0, 0, 0.8)')
+        .style('color', 'white')
+        .style('padding', '8px 12px')
+        .style('border-radius', '4px')
+        .style('font-size', '12px')
+        .style('pointer-events', 'none')
+        .style('opacity', 0);
+
+        // Mount the tool tip when the mouse hovers over a rating dot
+        circles.on('mousemove', function(event: MouseEvent, d: Ratings) {
+            tooltip.style('opacity', 1)
+            .html(`<p>${d.media.title}</p><br/>Coordinates: (${d.x_coordinate}, ${d.y_coordinate})`)
+            .style('left', (event.pageX + 10) + 'px')
+            .style('top', (event.pageY - 10) + 'px')
+        }).on('mouseout', function() {
+            tooltip.style('opacity', 0)
+        });
+
+        return () => {
+            tooltip.remove();
+        };
 
 
     }, [data])

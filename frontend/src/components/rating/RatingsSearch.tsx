@@ -81,10 +81,10 @@ const RatingSearch = () => {
                     onChange={({ target }) => handleFilterChange('quadrant', target.value)}    
                 >
                         <option value="">All quadrants</option>
-                        <option value="amazing">Amazing</option>
-                        <option value="guilty-pleasure">Guilty Pleasure</option>
-                        <option value="great-not-for-me">Great, But Not For Me</option>
-                        <option value="dont-touch">Don't Touch</option>
+                        <option value="amazing">over</option>
+                        <option value="guilty-pleasure">overhated</option>
+                        <option value="great-not-for-me">overrated</option>
+                        <option value="dont-touch">under</option>
                 </select>
             </div>
 

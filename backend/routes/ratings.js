@@ -21,14 +21,14 @@ const quadrants = (quadrant, ratings) => {
     if (quadrant === "amazing") return ratings.filter(r => r.x_coordinate > 0 && r.y_coordinate > 0)
     if (quadrant === "guilty-pleasure") return ratings.filter(r => r.x_coordinate < 0 && r.y_coordinate > 0)
     if (quadrant === "dont-touch") return ratings.filter(r => r.x_coordinate < 0 && r.y_coordinate < 0)
-    if (quadrant === "great-not-for-me") return ratings.filter(r.x_coordinate > 0 && r.y_coordinate < 0)
+    if (quadrant === "great-not-for-me") return ratings.filter(r => r.x_coordinate > 0 && r.y_coordinate < 0)
         
 }
 
 router.get('/users/:id/ratings', (request, response) => {
     // this is used to get a user's ratings alongside query parameters
     // for example:  http://localhost:3001/api/users/:userId/ratings
-    // query:        http://localhost:3001/api/users/:userId/ratings?title=avengers&media_type=movie
+    // query:        http://localhost:3001/api/users/:userId/ratings?title=avengers&media_type=movie&quadrant=guilty-pleasure
 
     const id = Number(request.params.id)
     const title = request.query.title?.toLowerCase()
