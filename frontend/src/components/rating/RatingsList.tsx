@@ -9,10 +9,10 @@ const RatingsList = ({ user }: RatingsListProps) => {
     const { ratings, loading, error } = useRatings();
 
     const handleColor = (x: number, y: number) => {
-        if (x > 0 && y > 0) return '#94fd9d';
-        if (x < 0 && y > 0) return '#fec789';
-        if (x > 0 && y < 0) return '#94a7f3';
-        return '#ffa5a5';
+        if (x > 0 && y > 0) return 'var(--green)';
+        if (x < 0 && y > 0) return 'var(--orange)';
+        if (x > 0 && y < 0) return 'var(--blue)';
+        return 'var(--red)';
     }
 
     if (loading) return <div>Loading....</div>

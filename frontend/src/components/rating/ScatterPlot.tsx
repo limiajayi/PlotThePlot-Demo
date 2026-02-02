@@ -58,10 +58,10 @@ const ScatterPlot = ({ data }: ScatterPlotProps) => {
         .range([innerHeight, 0])
 
         const quadrants: Quadrant[] = [
-            { x: 0, y: 0, width: innerWidth / 2, height: innerHeight / 2, label: "overhated",  color: "#fec789"},
-            { x: innerWidth / 2, y: 0, width: innerWidth / 2, height: innerHeight / 2, label: "over",  color: "#94fd9d"},
-            { x: 0, y: innerHeight / 2, width: innerWidth / 2, height: innerHeight / 2, label: "under",  color: "#ffa5a5"},
-            { x: innerWidth / 2, y: innerHeight / 2, width: innerWidth / 2, height: innerHeight / 2, label: "overrated",  color:"#94a7f3"},
+            { x: 0, y: 0, width: innerWidth / 2, height: innerHeight / 2, label: "overhated",  color: "var(--orange)"},
+            { x: innerWidth / 2, y: 0, width: innerWidth / 2, height: innerHeight / 2, label: "over",  color: "var(--green)"},
+            { x: 0, y: innerHeight / 2, width: innerWidth / 2, height: innerHeight / 2, label: "under",  color: "var(--red)"},
+            { x: innerWidth / 2, y: innerHeight / 2, width: innerWidth / 2, height: innerHeight / 2, label: "overrated",  color:"var(--blue)"},
         ]
 
         // DRAWING BACKGROUND QUADRANTS
@@ -87,7 +87,7 @@ const ScatterPlot = ({ data }: ScatterPlotProps) => {
         .attr('y', d => d.y + d.height / 2)
         .attr('text-anchor', 'middle')
         .attr('dominant-baseline', 'middle')
-        .attr('font-size', '12px')
+        .attr('font-size', '14px')
         .style('fill', '#666')
         .style('font-weight', '500')
         .text(d => d.label);
