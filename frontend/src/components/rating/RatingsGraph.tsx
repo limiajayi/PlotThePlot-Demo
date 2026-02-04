@@ -29,8 +29,26 @@ const RatingsGraph = ({ user }: RatingsGraphProps) => {
         setSelectedCoordinates({ x: 0, y: 0 });
     };
 
-    const handleRatingSubmit = (rating: NewRating) => {
-        
+    const handleRatingSubmit = async (rating: NewRating) => {
+        try {
+            const response = await fetch(`http://localhost:3001/api/users/${user.id.toString()}/ratings`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ...rating,
+                })
+            });
+
+            if (!response.ok) throw new Error('Failed to create rating');
+
+            //Close the modal we're done!
+            setIsModalOpen(false);
+            setSelectedCoordinates({ x: 0, y: 0 });
+
+        } catch (error) {
+            console.error('Error submitting rating: ', error);
+            alert('Failed to submit rating');
+        }
     };
 
     if (loading) return <div>Loading graph...</div>;
@@ -39,7 +57,11 @@ const RatingsGraph = ({ user }: RatingsGraphProps) => {
     return (
             <div>
                 <h2>Graph for {user?.username}</h2>
-
+                    {ratings.length === 0 && (
+                        <div>
+                            No ratings yet. Click the graph below to add a rating
+                        </div>
+                    )}
                     <ErrorBoundary FallbackComponent={() => <div>Error Detected</div>}>
                         <ScatterPlot 
                             data={ratings} 
@@ -50,11 +72,11 @@ const RatingsGraph = ({ user }: RatingsGraphProps) => {
                             isOpen={isModalOpen}
                             onRequestClose={handleModalClose}
                             contentLabel="Rate Media"
-                            ariaHideApp={false}
+                            appElement={document.getElementById('root') as HTMLElement}
                             style={{
                                 content: {
                                     width: '400px',
-                                    height: '70vh',
+                                    height: '80%',
                                     margin: 'auto',
                                     borderRadius: '8px'
                                 }

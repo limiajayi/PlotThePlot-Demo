@@ -12,8 +12,6 @@ src/
 │   ├── rating/
 │   │   ├── RatingGraph.tsx          # D3 scatter plot
 │   │   ├── RatingForm.tsx           # Multi-step rating creation
-│   │   ├── CoordinatePicker.tsx     # Click-to-rate interface
-│   │   ├── ContextForm.tsx          # "Why good/bad" questions
 │   │   ├── RatingCard.tsx           # Individual rating display
 │   │   └── RatingList.tsx           # Grid view of ratings
 │   ├── media/
@@ -74,5 +72,4 @@ npm run dev
 The server will start from `http://localhost:5174/`
 
 ## Current Status ✈️
-- Learning D3
-- Using D3 and useRef to control an svg element for the main graph
+- Wiring up POST methods with the frontend

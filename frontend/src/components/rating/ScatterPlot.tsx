@@ -249,7 +249,7 @@ const ScatterPlot = ({ data, onCoordinateClick }: ScatterPlotProps) => {
 
     return (
         <div>
-            The graph!!!
+            
             <svg 
                 ref={svgRef}
                 width={600}
