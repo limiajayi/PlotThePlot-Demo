@@ -75,22 +75,6 @@ router.get('/users/:id/ratings', (request, response) => {
     }
 })
 
-
-// // API endpoint to get a specific user's ratings
-// router.get('/users/:id/ratings', (request, response) => {
-//     const id = Number(request.params.id)
-//     const userRatings = ratings.filter(rating => rating.user_id === id)
-
-//     if (userRatings) {
-//         return response.json(userRatings)
-//     } else {
-//         return response.status(404).json({
-//             error: "This user does not exist."
-//         })
-//     }
-// })
-
-
 router.get('/users/:userId/ratings/:ratingId', (request, response) => {
     const {userId, ratingId} = request.params
     const rating = ratings.find(r => r.id === Number(ratingId))

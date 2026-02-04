@@ -17,6 +17,8 @@ type Quadrant = {
     color: string;
 };
 
+// TODO: What happens when a user has no ratings... empty svg 
+
 const ScatterPlot = ({ data, onCoordinateClick }: ScatterPlotProps) => {
     if (!data) <div>Placeholder graph!!!!</div>;
 
@@ -215,6 +217,7 @@ const ScatterPlot = ({ data, onCoordinateClick }: ScatterPlotProps) => {
             tooltip.style('opacity', 0)
         });
 
+        // to add a new rating
         svg.on('click', function(event) {
                 // get mouse position relative to SVG
                 const [mouseX, mouseY] = d3.pointer(event, this);
@@ -230,8 +233,6 @@ const ScatterPlot = ({ data, onCoordinateClick }: ScatterPlotProps) => {
                 // round to 2 decimal places
                 const x = Math.round(clampedX * 100) / 100;
                 const y = Math.round(clampedY * 100) / 100;
-
-                console.log(`(${x}, ${y})`);
 
                 // tell the parent component about the click
                 if (onCoordinateClick) {

@@ -1,15 +1,10 @@
-import { useParams } from 'react-router-dom';
 import RatingsList from '../rating/RatingsList';
 import RatingSearch from '../rating/RatingsSearch';
-import useUser from '../../hooks/useUser';
+// import RatingsForm from '../rating/RatingsForm';
 import RatingsGraph from '../rating/RatingsGraph';
+import { useParams } from 'react-router-dom';
 import { useState } from 'react';
-
-//TODO: Customize
-// I want this to contain:
-// profile picture
-// username
-// a quick bio probably
+import useUser from '../../hooks/useUser';
 
 const ProfilePage = () => {
     const { userId } = useParams<{ userId: string }>();

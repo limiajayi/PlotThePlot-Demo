@@ -12,4 +12,6 @@ export type Ratings = {
     watch_number?: number;
     created_at: string;
     media: Media
-}
+};
+
+export type NewRating = Omit<Ratings, 'id' | 'user_id' | 'created_at' | 'media'>;
