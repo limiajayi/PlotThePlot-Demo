@@ -3,10 +3,11 @@ import type { Ratings } from "../../types/ratings.types";
 import * as d3 from 'd3';
 
 type ScatterPlotProps = {
-    data: Ratings[]
+    data: Ratings[];
+    onCoordinateClick?: (x: number, y:number) => void;
 };
 
-// the type of single quadrants: over, overhated, overrated
+// the type of single quadrants: over, overhated, overrated, under
 type Quadrant = {
     x: number;
     y: number;
@@ -16,7 +17,7 @@ type Quadrant = {
     color: string;
 };
 
-const ScatterPlot = ({ data }: ScatterPlotProps) => {
+const ScatterPlot = ({ data, onCoordinateClick }: ScatterPlotProps) => {
     if (!data) <div>Placeholder graph!!!!</div>;
 
 
@@ -41,7 +42,8 @@ const ScatterPlot = ({ data }: ScatterPlotProps) => {
         svg.selectAll('*').remove();
 
         const g = svg.append('g')
-                    .attr('transform', `translate(${margin.left}, ${margin.top})`);
+                    .attr('transform', `translate(${margin.left}, ${margin.top})`)
+                    .style('cursor', 'crosshair');
 
         // since the x px is actually from 0 to 500 in the svg
         // we need a way to transform the x axis from [-1, 1] to [0, 500]
@@ -90,6 +92,7 @@ const ScatterPlot = ({ data }: ScatterPlotProps) => {
         .attr('font-size', '14px')
         .style('fill', '#666')
         .style('font-weight', '500')
+        .style('cursor', 'crosshair') // didnt want the I-beam when hovering over text
         .text(d => d.label);
 
         // DRAW AXES
@@ -212,12 +215,36 @@ const ScatterPlot = ({ data }: ScatterPlotProps) => {
             tooltip.style('opacity', 0)
         });
 
+        svg.on('click', function(event) {
+                // get mouse position relative to SVG
+                const [mouseX, mouseY] = d3.pointer(event, this);
+
+                // convert pixel coordinates to rating coordinates
+                const ratingX = xScale.invert(mouseX - margin.left);
+                const ratingY = yScale.invert(mouseY - margin.top);
+
+                // clamp range from -1 to 1
+                const clampedX = Math.max(-1, Math.min(1, ratingX));
+                const clampedY = Math.max(-1, Math.min(1, ratingY));
+
+                // round to 2 decimal places
+                const x = Math.round(clampedX * 100) / 100;
+                const y = Math.round(clampedY * 100) / 100;
+
+                console.log(`(${x}, ${y})`);
+
+                // tell the parent component about the click
+                if (onCoordinateClick) {
+                    onCoordinateClick(x, y);
+                }
+            }
+        )
+
         return () => {
             tooltip.remove();
         };
 
-
-    }, [data])
+    }, [data, onCoordinateClick])
 
     return (
         <div>
