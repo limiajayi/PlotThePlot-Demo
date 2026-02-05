@@ -84,7 +84,7 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel }: RatingsFormProps) => {
                             onChange={({ target }) => setSearchQuery(target.value)}
                             placeholder="Search for media..."
                             style={{ width: '95%', padding: '8px', borderRadius: '8px', border: '1px solid #252525' }}
-                            required
+                            // required
                         />
                         <button type="button" onClick={handleSearch}>
                             Search
@@ -129,7 +129,7 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel }: RatingsFormProps) => {
                             value={formData.good_reason}
                             onChange={({ target }) => setFormData(prev => ({ ...prev, good_reason: target.value }))}
                             style={{ width: '95%', borderRadius: '8px', border: '1px solid #252525' }}
-                            required
+                            
                         />
                         
                     </div>
@@ -142,7 +142,6 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel }: RatingsFormProps) => {
                             value={formData.like_reason}
                             onChange={({ target }) => setFormData(prev => ({ ...prev, like_reason: target.value }))}
                             style={{ width: '95%', borderRadius: '8px', border: '1px solid #252525' }}
-                            required
                         />
                     </div>
 
@@ -154,7 +153,6 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel }: RatingsFormProps) => {
                             value={formData.context}
                             onChange={({ target }) => setFormData(prev => ({ ...prev, context: target.value }))}
                             style={{ width: '95%', borderRadius: '8px', border: '1px solid #252525' }}
-                            required
                         />
                     </div>
 
