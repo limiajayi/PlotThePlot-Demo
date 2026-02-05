@@ -5,6 +5,7 @@ import * as d3 from 'd3';
 type ScatterPlotProps = {
     data: Ratings[];
     onCoordinateClick?: (x: number, y:number) => void;
+    onDotHover: (ratings: Ratings | null) => void;
 };
 
 // the type of single quadrants: over, overhated, overrated, under
@@ -19,7 +20,7 @@ type Quadrant = {
 
 // TODO: What happens when a user has no ratings... empty svg 
 
-const ScatterPlot = ({ data, onCoordinateClick }: ScatterPlotProps) => {
+const ScatterPlot = ({ data, onCoordinateClick, onDotHover }: ScatterPlotProps) => {
     if (!data) <div>Placeholder graph!!!!</div>;
 
 
@@ -91,7 +92,7 @@ const ScatterPlot = ({ data, onCoordinateClick }: ScatterPlotProps) => {
         .attr('y', d => d.y + d.height / 2)
         .attr('text-anchor', 'middle')
         .attr('dominant-baseline', 'middle')
-        .attr('font-size', '14px')
+        .attr('font-size', '18px')
         .style('fill', '#666')
         .style('font-weight', '500')
         .style('cursor', 'crosshair') // didnt want the I-beam when hovering over text
@@ -208,13 +209,20 @@ const ScatterPlot = ({ data, onCoordinateClick }: ScatterPlotProps) => {
         .style('opacity', 0);
 
         // Mount the tool tip when the mouse hovers over a rating dot
-        circles.on('mousemove', function(event: MouseEvent, d: Ratings) {
+        circles
+        .on('mousemove', function(event: MouseEvent, d: Ratings) {
             tooltip.style('opacity', 1)
-            .html(`<p>${d.media.title}</p><br/>Coordinates: (${d.x_coordinate}, ${d.y_coordinate})`)
+            .html(`<p><strong><i>${d.media.title}</i></strong></p>Coordinates: (${d.x_coordinate}, ${d.y_coordinate})`)
             .style('left', (event.pageX + 10) + 'px')
             .style('top', (event.pageY - 10) + 'px')
-        }).on('mouseout', function() {
+        })
+        .on('mouseout', function() {
             tooltip.style('opacity', 0)
+        })
+        .on('click', function(event, d: Ratings) {
+            event.stopPropagation();
+            
+            if (onDotHover) onDotHover(d);
         });
 
         // to add a new rating
@@ -245,7 +253,7 @@ const ScatterPlot = ({ data, onCoordinateClick }: ScatterPlotProps) => {
             tooltip.remove();
         };
 
-    }, [data, onCoordinateClick])
+    }, [data, onCoordinateClick, onDotHover])
 
     return (
         <div>

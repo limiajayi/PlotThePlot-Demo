@@ -5,7 +5,8 @@ import ScatterPlot from "./ScatterPlot";
 import { useState } from "react";
 import Modal from "react-modal";
 import RatingsForm from "./RatingsForm";
-import type { NewRating } from "../../types/ratings.types";
+import type { NewRating, Ratings } from "../../types/ratings.types";
+import RatingsDetail from "./RatingsDetail";
 
 type RatingsGraphProps = {
     user: User;
@@ -16,6 +17,7 @@ const RatingsGraph = ({ user }: RatingsGraphProps) => {
     const { ratings, loading, error } = useRatings();
     const [isModalOpen, setIsModalOpen] = useState(false); // false when modal is closed, true when modal is open
     const [selectedCoordinates, setSelectedCoordinates] = useState<{ x: number, y: number }>({ x: 0, y: 0 }); // passed from scatter plot
+    const [selectedRatings, setSelectedRatings] = useState<Ratings | null>(null);
 
     // sets coordinates from the ScatterPlot component
     const handleCoordinateClick = (x: number, y: number ) => {
@@ -62,10 +64,23 @@ const RatingsGraph = ({ user }: RatingsGraphProps) => {
                             No ratings yet. Click the graph below to add a rating
                         </div>
                     )}
+
+                    <ErrorBoundary FallbackComponent={() => <div>Something's wrong with the form</div>}>
+                        {selectedRatings && (
+                            <div style={{ width: '30%', position: 'absolute', top: '90%', right: '5rem' }}>
+                                <button onClick={() => setSelectedRatings(null)}>
+                                    Close
+                                </button>
+                                <RatingsDetail ratings={selectedRatings} />
+                            </div>
+                        )}
+                    </ErrorBoundary>
+
                     <ErrorBoundary FallbackComponent={() => <div>Error Detected</div>}>
                         <ScatterPlot 
                             data={ratings} 
                             onCoordinateClick={handleCoordinateClick}
+                            onDotHover={setSelectedRatings}
                         />
 
                         <Modal

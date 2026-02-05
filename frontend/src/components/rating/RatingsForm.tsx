@@ -129,7 +129,6 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel }: RatingsFormProps) => {
                             value={formData.good_reason}
                             onChange={({ target }) => setFormData(prev => ({ ...prev, good_reason: target.value }))}
                             style={{ width: '95%', borderRadius: '8px', border: '1px solid #252525' }}
-                            
                         />
                         
                     </div>
