@@ -159,7 +159,7 @@ router.put('/users/:userId/ratings/:ratingId', (request, response) => {
 //API endpoint to delete a user's rating
 router.delete('/users/:userId/ratings/:ratingId', (request, response) => {
     const {userId, ratingId} = request.params
-    ratings = ratings.filter(r => r.id === Number(ratingId) && r.user_id === Number(userId))
+    ratings = ratings.filter(r => r.id !== Number(ratingId) && r.user_id === Number(userId))
 
     response.status(204).end()
 })

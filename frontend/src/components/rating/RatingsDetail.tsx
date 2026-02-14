@@ -2,9 +2,10 @@ import type { Ratings } from "../../types/ratings.types"
 
 type RatingsDetailProps = {
     ratings: Ratings | null;
+    onDelete: () => void;
 };
 
-const RatingsDetail = ({ ratings }: RatingsDetailProps) => {
+const RatingsDetail = ({ ratings, onDelete }: RatingsDetailProps) => {
     if (!ratings) return <div>No ratings available</div>;
     return (
         <div>
@@ -43,6 +44,7 @@ const RatingsDetail = ({ ratings }: RatingsDetailProps) => {
                     Edit
                 </button>
                 <button 
+                    onClick={onDelete}
                     style={{ padding: '5px', margin: '4px', backgroundColor: '#db3838', color: 'white',  borderRadius: '3px', border: '1px solid black'}}
                 >
                     Delete

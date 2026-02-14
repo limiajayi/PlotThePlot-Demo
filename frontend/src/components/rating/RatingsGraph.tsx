@@ -31,6 +31,7 @@ const RatingsGraph = ({ user }: RatingsGraphProps) => {
         setSelectedCoordinates({ x: 0, y: 0 });
     };
 
+    // when creating a new rating
     const handleRatingSubmit = async (rating: NewRating) => {
         try {
             const response = await fetch(`http://localhost:3001/api/users/${user.id.toString()}/ratings`, {
@@ -53,6 +54,32 @@ const RatingsGraph = ({ user }: RatingsGraphProps) => {
         }
     };
 
+    const handleDelete = async () => {
+        if (!selectedRatings) return;
+        if (!confirm('Are you ure you want to delete this rating?')) return;
+
+        try {
+            const response = await fetch(
+                `http://localhost:3001/api/users/${user.id.toString()}/ratings/${selectedRatings.id}`,
+                { method: 'DELETE' }
+            );
+
+            if (!response.ok) throw new Error('Failed to delete rating.');
+
+            // close ratings detail
+            setSelectedRatings(null);
+
+            //refresh the page
+            //for now
+            window.location.reload();
+
+        } catch (error) {
+            console.error('Error deleting: ', error);
+            alert('Failed to delete rating');
+        }
+    };
+
+
     if (loading) return <div>Loading graph...</div>;
     if (error) return <div>Error loading graph: {error}</div>;
 
@@ -71,7 +98,10 @@ const RatingsGraph = ({ user }: RatingsGraphProps) => {
                                 <button onClick={() => setSelectedRatings(null)}>
                                     Close
                                 </button>
-                                <RatingsDetail ratings={selectedRatings} />
+                                <RatingsDetail 
+                                    ratings={selectedRatings}
+                                    onDelete={handleDelete}
+                                />
                             </div>
                         )}
                     </ErrorBoundary>
