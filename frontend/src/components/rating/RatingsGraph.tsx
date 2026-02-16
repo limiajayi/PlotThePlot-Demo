@@ -18,6 +18,7 @@ const RatingsGraph = ({ user }: RatingsGraphProps) => {
     const [isModalOpen, setIsModalOpen] = useState(false); // false when modal is closed, true when modal is open
     const [selectedCoordinates, setSelectedCoordinates] = useState<{ x: number, y: number }>({ x: 0, y: 0 }); // passed from scatter plot
     const [selectedRatings, setSelectedRatings] = useState<Ratings | null>(null);
+    const [editingRating, setEditingRating] = useState<Ratings | null>(null);
 
     // sets coordinates from the ScatterPlot component
     const handleCoordinateClick = (x: number, y: number ) => {
@@ -29,31 +30,47 @@ const RatingsGraph = ({ user }: RatingsGraphProps) => {
     const handleModalClose = () => {
         setIsModalOpen(false);
         setSelectedCoordinates({ x: 0, y: 0 });
+        setEditingRating(null);
     };
 
     // when creating a new rating
+    // or editing an existing rating
     const handleRatingSubmit = async (rating: NewRating) => {
         try {
-            const response = await fetch(`http://localhost:3001/api/users/${user.id.toString()}/ratings`, {
-                method: 'POST',
+            // if the user is editing we're changing it with a rating id
+            // else we're letting the server decide the id
+            const url = editingRating 
+                        ? `http://localhost:3001/api/users/${user.id}/ratings/${editingRating.id}` 
+                        : `http://localhost:3001/api/users/${user.id}/ratings`;
+            
+            // if editing the method is PUT
+            // else the method is POST
+            const method = editingRating ? 'PUT' : 'POST';
+
+            const response = await fetch(url, {
+                method: method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     ...rating,
                 })
             });
 
-            if (!response.ok) throw new Error('Failed to create rating');
+            if (!response.ok) throw new Error(`Failed to ${editingRating ? 'update' : 'create'} rating.`);
 
             //Close the modal we're done!
             setIsModalOpen(false);
-            setSelectedCoordinates({ x: 0, y: 0 });
+            setEditingRating(null);
+            setSelectedCoordinates({ x: 0, y: 0 }); // default for selected coordinates
+
+            window.location.reload()
 
         } catch (error) {
-            console.error('Error submitting rating: ', error);
-            alert('Failed to submit rating');
+            console.error('Error rating: ', error);
+            alert(`Failed to ${editingRating ? 'update' : 'create'} rating`);
         }
     };
 
+    // for when the user deletes a rating
     const handleDelete = async () => {
         if (!selectedRatings) return;
         if (!confirm('Are you ure you want to delete this rating?')) return;
@@ -79,6 +96,15 @@ const RatingsGraph = ({ user }: RatingsGraphProps) => {
         }
     };
 
+    // for when the user wants to edit a rating
+    // use rating form & rating detail
+    const handleEdit = () => {
+        setEditingRating(selectedRatings);
+        setSelectedRatings(null);
+        setIsModalOpen(true);
+        setSelectedCoordinates({ x: selectedRatings?.x_coordinate ?? 0, y: selectedRatings?.y_coordinate ?? 0 });
+    }
+
 
     if (loading) return <div>Loading graph...</div>;
     if (error) return <div>Error loading graph: {error}</div>;
@@ -91,21 +117,7 @@ const RatingsGraph = ({ user }: RatingsGraphProps) => {
                             No ratings yet. Click the graph below to add a rating
                         </div>
                     )}
-
-                    <ErrorBoundary FallbackComponent={() => <div>Something's wrong with the form</div>}>
-                        {selectedRatings && (
-                            <div style={{ width: '30%', position: 'absolute', top: '90%', right: '5rem' }}>
-                                <button onClick={() => setSelectedRatings(null)}>
-                                    Close
-                                </button>
-                                <RatingsDetail 
-                                    ratings={selectedRatings}
-                                    onDelete={handleDelete}
-                                />
-                            </div>
-                        )}
-                    </ErrorBoundary>
-
+                    
                     <ErrorBoundary FallbackComponent={() => <div>Error Detected</div>}>
                         <ScatterPlot 
                             data={ratings} 
@@ -127,11 +139,31 @@ const RatingsGraph = ({ user }: RatingsGraphProps) => {
                                 }
                             }}
                         >
-                            <RatingsForm 
-                                coordinates={selectedCoordinates}
-                                onSubmit={handleRatingSubmit}
-                                onCancel={handleModalClose}
-                            />
+
+                            {selectedRatings && (
+                            <div>
+                                <button onClick={() => {
+                                    setSelectedRatings(null);
+                                    setIsModalOpen(false);
+                                }}>
+                                    Close
+                                </button>
+                                <RatingsDetail 
+                                    ratings={selectedRatings}
+                                    onDelete={handleDelete}
+                                    onEdit={handleEdit}
+                                />
+                            </div>
+                            )}
+
+                            {!selectedRatings && (
+                                <RatingsForm 
+                                    coordinates={selectedCoordinates}
+                                    onSubmit={handleRatingSubmit}
+                                    onCancel={handleModalClose}
+                                    editingRating={editingRating}
+                                />
+                            )}
                         </Modal>
                     </ErrorBoundary>
             </div>

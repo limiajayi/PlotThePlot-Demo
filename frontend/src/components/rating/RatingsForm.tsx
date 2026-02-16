@@ -1,22 +1,23 @@
 import { useState } from "react";
-import type { NewRating } from "../../types/ratings.types";
+import type { NewRating, Ratings } from "../../types/ratings.types";
 import type { Media } from "../../types/media.types";
 
 type RatingsFormProps = {
     coordinates: { x: number, y: number };
     onSubmit: (rating: NewRating) => void;
     onCancel: () => void;
+    editingRating?: Ratings | null;
 };
 
-const RatingsForm = ({ coordinates, onSubmit, onCancel }: RatingsFormProps) => {
+const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: RatingsFormProps) => {
 
     const [searchQuery, setSearchQuery] = useState(''); // passed to useParams then the backend to return the media we need
     const [searchResults, setSearchResults] = useState<Media[]>([]); 
-    const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
+    const [selectedMedia, setSelectedMedia] = useState<Media | null>(editingRating?.media || null);
     const [formData, setFormData] = useState({
-        good_reason: '',
-        like_reason: '',
-        context: ''
+        good_reason: editingRating?.good_reason || '',
+        like_reason: editingRating?.like_reason || '',
+        context: editingRating?.context || ''
     });
 
     // queries the backend to find the appropriate media results
@@ -60,7 +61,7 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel }: RatingsFormProps) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <h3>Rate New Media</h3>
+            <h3>Rate { editingRating ? "" : "New" } Media</h3>
             <div style={{ width: '95%', marginBottom: '15px', padding: '5px', background: '#f5f5f5', borderRadius: '5px' }}>
                 {/* Shows the user what coordinates they picked */}
                     {coordinates && (

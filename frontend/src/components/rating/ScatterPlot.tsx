@@ -222,7 +222,10 @@ const ScatterPlot = ({ data, onCoordinateClick, onDotHover }: ScatterPlotProps) 
         .on('click', function(event, d: Ratings) {
             event.stopPropagation();
             
-            if (onDotHover) onDotHover(d);
+            if (onDotHover && onCoordinateClick) {
+                onCoordinateClick(d.x_coordinate, d.y_coordinate);
+                onDotHover(d);
+            };
         });
 
         // to add a new rating
