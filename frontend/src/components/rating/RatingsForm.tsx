@@ -61,6 +61,11 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: Ratings
 
     return (
         <form onSubmit={handleSubmit}>
+            {editingRating && (
+                <p>
+                    Note: To change coordinates, delete this rating and create a new one.
+                </p>
+            )}
             <h3>Rate { editingRating ? "" : "New" } Media</h3>
             <div style={{ width: '95%', marginBottom: '15px', padding: '5px', background: '#f5f5f5', borderRadius: '5px' }}>
                 {/* Shows the user what coordinates they picked */}
