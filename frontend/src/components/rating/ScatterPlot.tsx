@@ -21,8 +21,6 @@ type Quadrant = {
 // TODO: What happens when a user has no ratings... empty svg 
 
 const ScatterPlot = ({ data, onCoordinateClick, onDotHover }: ScatterPlotProps) => {
-    if (!data) <div>Placeholder graph!!!!</div>;
-
 
     const svgRef = useRef<SVGSVGElement>(null); // useRef to control the svg DOM element
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { supabase } from "../lib/supabase";
 import { type User } from "../types/user.types";
 
 // will eventually be changed to useAuth
@@ -11,16 +12,25 @@ const useUser = (userId: string | undefined) => {
         const fetchUser = async () => {
             // if not user return nothing
             if (!userId) return;
+            
             try {
-                setLoading(true)
+                setLoading(true);
 
-                const response = await fetch(`http://localhost:3001/api/users/${userId}`);
-                const data = await response.json();
+                // setting up stuff for supabase
+                const { data, error } = await supabase
+                                        .from('users')
+                                        .select('*')
+                                        .eq('id', userId)
+                                        .single();
+                
+                if (error) throw new Error('Error: ', error);
 
-                setUser(data);
-            } catch (err) {
+                setUser(data as User);
+                setError(null);
+
+            } catch (error) {
                 setError('Failed to load user.');
-                console.log(err);
+                console.error(error);
             } finally {
                 setLoading(false);
             }

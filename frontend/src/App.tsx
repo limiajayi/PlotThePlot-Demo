@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 const App = () => {
   return (
       <div>
-          
+          My nothing App.
         <BrowserRouter>
           <Routes>
             <Route path="/users/:userId/profile" element={<ProfilePage />} />
