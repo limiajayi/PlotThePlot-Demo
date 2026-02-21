@@ -1,7 +1,7 @@
 import { type Ratings } from "./ratings.types";
 
 export type User = {
-    id: number;
+    id: string;
     username: string;
     email: string;
     profile_picture?: string;
