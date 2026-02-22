@@ -4,7 +4,7 @@ import type { User } from "../types/user.types";
 import type { Session } from "@supabase/supabase-js";
 import { AuthContext } from "./AuthContext";
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [session, setSession] = useState<Session | null>(null);
     const [loading, setLoading] = useState(true);
@@ -54,28 +54,44 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     }, []);
 
-    const login = async (email: string, password: string) => {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) return { error: error.message };
-        return { error: null };
+    const login = async (username: string, password: string) => {
+        // find the email for this username
+        const { data, error: lookupError } = await supabase
+                        .from('users')
+                        .select('email')
+                        .eq('username', username)
+                        .single();
+        
+        if (lookupError || !data) return { error: 'Username not found', userId: null };
+
+        // use the email to log in!
+        const { data: authData, error } = await supabase.auth.signInWithPassword({
+            email: data.email,
+            password
+        });
+
+        if (error) return { error: error.message, userId: null };
+        return { error: null, userId: authData.user.id };
     };
 
     const signup = async (email: string, password: string, username: string) => {
         // Create the auth user
         const { data, error: signUpError } = await supabase.auth.signUp({ email, password });
-        if (signUpError) return { error: signUpError.message };
-        if (!data.user) return { error: 'Signup failed - no user returned.' };
+        if (signUpError) return { error: signUpError.message, userId: null };
+        if (!data.user) return { error: 'Signup failed - no user returned.', userId: null };
+
 
         // insert into users table
         const { error: profileError } = await supabase
-                                                    .from('users')
-                                                    .insert({
-                                                        id: data.user.id,
-                                                        email,
-                                                        username
-                                                    });
-        if (profileError) return { error: profileError.message };
-        return { error: null };
+                                .from('users')
+                                .insert({
+                                    id: data.user.id,
+                                    email,
+                                    username
+                                });
+
+        if (profileError) return { error: profileError.message, userId: null };
+        return { error: null, userId: data.user.id };
     };
 
     const logout = async () => {
@@ -91,3 +107,5 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     );
 
 };
+
+export default AuthProvider;
