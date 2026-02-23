@@ -118,6 +118,9 @@ const RatingsGraph = ({ user }: RatingsGraphProps) => {
                         </div>
                     )}
                     
+
+
+
                     <ErrorBoundary FallbackComponent={() => <div>Error Detected</div>}>
                         <ScatterPlot 
                             data={ratings} 

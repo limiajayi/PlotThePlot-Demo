@@ -26,7 +26,7 @@ const ScatterPlot = ({ data, onCoordinateClick, onDotHover }: ScatterPlotProps) 
 
     useEffect(() => {
 
-        if (!data || data.length === 0) return;
+        //if (!data || data.length === 0) return;
 
         // the actual graph is a smaller box within the svg element 
         // svg is 600 by 600
