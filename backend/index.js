@@ -1,3 +1,5 @@
+require('dotenv').config()
+const { supabase } = require('./lib/supabase')
 const express = require('express')
 const app = express()
 const usersRouter = require('./routes/users')
@@ -27,6 +29,10 @@ app.use('/api/', ratingsRouter)
 
 
 
+supabase.from('users').select('*').then(({data, error}) => {
+    console.log('db reachable:', data)
+    console.log('error:', error)
+})
 
 const PORT = 3001
 app.listen(PORT, () => {

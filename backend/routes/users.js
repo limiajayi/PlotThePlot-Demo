@@ -1,3 +1,4 @@
+const { supabase } = require('../lib/supabase');
 const express = require('express')
 const router = express.Router()
 let users = require('../data/users')
@@ -10,8 +11,18 @@ let media = require('../data/media')
 //TODO: Change POST requests to include a ratings array
 
 //API endpoint to get all users
-router.get('/', (request, response) => {
-    response.json(users)
+router.get('/', async (request, response) => {
+
+    const { data, error } = await supabase.from('users').select('*, ratings (*)');
+
+    if (error) {
+        console.log("Error:", error)
+        return response.status(404).json({
+            error: "No users yet."
+        })
+    }
+    
+    response.json(data);
 })
 
 //API endpoint to get a specific user
