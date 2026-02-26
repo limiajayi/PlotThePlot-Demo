@@ -3,7 +3,7 @@ import { supabase } from "../lib/supabase";
 import { type User } from "../types/user.types";
 
 // will eventually be changed to useAuth
-const useUser = (userId: string | undefined) => {
+const useUser = (username: string | undefined) => {
     const [user, setUser] = useState<User | null>(null); // user data
     const [loading, setLoading] = useState(true);  
     const [error, setError] = useState<string | null>(null);
@@ -11,7 +11,7 @@ const useUser = (userId: string | undefined) => {
     useEffect(() => {
         const fetchUser = async () => {
             // if not user return nothing
-            if (!userId) return;
+            if (!username) return;
             
             try {
                 setLoading(true);
@@ -20,7 +20,7 @@ const useUser = (userId: string | undefined) => {
                 const { data, error } = await supabase
                                         .from('users')
                                         .select('*')
-                                        .eq('id', userId)
+                                        .eq('username', username)
                                         .single();
                 
                 if (error) throw new Error('Error: ', error);
@@ -37,7 +37,7 @@ const useUser = (userId: string | undefined) => {
         }
 
         fetchUser();
-    }, [userId])
+    }, [username])
 
     return { user, loading,  error}
 }

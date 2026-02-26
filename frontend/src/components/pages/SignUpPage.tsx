@@ -16,7 +16,7 @@ const SignUpPage = () => {
         setError(null);
         setLoading(true);
 
-        const {error, userId} = await signup(formData.email, formData.password, formData.username);
+        const { error } = await signup(formData.email, formData.password, formData.username);
 
         if (error) {
             setError(error);
@@ -25,7 +25,7 @@ const SignUpPage = () => {
         }
 
         // redirect them to their profile
-        navigate(`/users/${userId}/profile`);
+        navigate(`/users/${formData.username}/profile`);
     };
 
     return (

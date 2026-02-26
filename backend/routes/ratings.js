@@ -1,3 +1,4 @@
+const { supabase } = require('../lib/supabase')
 const express = require('express')
 const router = express.Router()
 let ratings = require('../data/ratings')
@@ -11,117 +12,112 @@ const generateId = (userId) => {
 }
 
 // takes in ratings objects and filters them based on the different quadrants
-// amazing media -> x positive y positive
-// guilty pleasure -> x negative y positive
-// good but not for me -> x positive y negative
-// dont touch -> x negative y negative
+// over -> x positive y positive
+// overhated -> x negative y positive
+// overrated -> x positive y negative
+// under -> x negative y negative
 
-const quadrants = (quadrant, ratings) => {
-
-    if (quadrant === "amazing") return ratings.filter(r => r.x_coordinate > 0 && r.y_coordinate > 0)
-    if (quadrant === "guilty-pleasure") return ratings.filter(r => r.x_coordinate < 0 && r.y_coordinate > 0)
-    if (quadrant === "dont-touch") return ratings.filter(r => r.x_coordinate < 0 && r.y_coordinate < 0)
-    if (quadrant === "great-not-for-me") return ratings.filter(r => r.x_coordinate > 0 && r.y_coordinate < 0)
-        
-}
-
-router.get('/users/:id/ratings', (request, response) => {
+router.get('/users/:id/ratings', async (request, response) => {
     // this is used to get a user's ratings alongside query parameters
     // for example:  http://localhost:3001/api/users/:userId/ratings
     // query:        http://localhost:3001/api/users/:userId/ratings?title=avengers&media_type=movie&quadrant=guilty-pleasure
 
-    const id = Number(request.params.id)
+    const id = request.params.id
     const title = request.query.title?.toLowerCase()
     const quadrant = request.query.quadrant?.toLowerCase()
     const media_type = request.query.media_type?.toLowerCase()
 
-    let results = ratings.filter(r => r.user_id === id)
+    let query = supabase
+                .from('ratings')
+                .select('*, media (*)')
+                .eq('user_id', id)
 
-    // changing each rating object to also include their equivalent media objects
-    // like a join on ratings and media
-    results = results.map(rating => {
-        const mediaItem = media.find(m => m.id === rating.media_id)
-        return {
-            ...rating,
-            media: mediaItem
-        }
-    })
+    if (media_type) query = query.eq('media.media_type', media_type)
+    
+    if (title) query = query.ilike('media.title', `%${title}%`) // ilike is case-insensitive
 
-    // searching ratings by quadrant
     if (quadrant) {
-        results = quadrants(quadrant, results)
+        if (quadrant === 'over') query = query.gt('x_coordinate', 0).gt('y_coordinate', 0)
+        else if (quadrant === 'overhated') query = query.lt('x_coordinate', 0).gt('y_coordinate', 0)
+        else if (quadrant === 'overrated') query = query.gt('x_coordinate', 0).lt('y_coordinate', 0)
+        else if (quadrant === 'under') query = query.lt('x_coordinate', 0).lt('y_coordinate', 0)
+        else { return response.status(404).json({ error: `No ratings exist for quadrant ${quadrant}` }) }
     }
 
-    // searching ratings by media type
-    if (media_type) {
-        results = results.filter(rating => rating.media?.media_type === media_type)
-    }
+    const { data, error } = await query
 
-    // searching ratings by title
-    if (title) {
-        results = results.filter(r => {
-            return r.media?.title.toLowerCase().includes(title)
-        })
-    }
-
-    // if results exist, return their json format
+    // if data exist, return their json format
     // else return status code 404: not found
-    if (results || results.length >= 0) {
-        return response.json(results)
-    } else {
+
+    if (error) {
+        console.log("Error: ", error)
         return response.status(404).json({
-            error: "This user does not exist."
+            error: `Error fetching user ratings: ${error.cause}`
         })
+    }
+
+    if (data) {
+        return response.json(data)
     }
 })
 
-router.get('/users/:userId/ratings/:ratingId', (request, response) => {
+router.get('/users/:userId/ratings/:ratingId', async (request, response) => {
     const {userId, ratingId} = request.params
-    const rating = ratings.find(r => r.id === Number(ratingId))
-    const body = request.body
+    
+    const { data, error } = await supabase
+        .from('ratings')
+        .select('*, media (*)')
+        .eq('user_id', userId)
+        .eq('id', ratingId)
 
-    if (!rating) {
+    if (error) {
         return response.status(404).json({
-            error: "This rating does not exist"
-        })
-    } else if (rating.user_id !== Number(userId)) {
-        return response.status(403).json({
-            error: "This is not your rating."
+            error: 'Error finding this rating.'
         })
     }
 
-    response.json(rating)
+    return response.json(data)
 })
 
 
 //API endpoint to add a new rating by user
-router.post('/users/:id/ratings', (request, response) => {
+router.post('/users/:id/ratings', async (request, response) => {
     const body = request.body
     const id = request.params.id
-    const date = new Date()
 
      // validate required fields
-    if (!body.media_id || !body.x_coordinate || !body.y_coordinate || !body.good_reason || !body.like_reason || !body.context) {
+    if (!body.media_id || !body.x_coordinate || !body.y_coordinate || !body.good_reason || !body.like_reason) {
         return response.status(400).json({
-            error: "Missing required fields: media_id, x_coordinate, y_coordinate, good_reason, like_reason, context"
+            error: "Missing required fields: media_id, x_coordinate, y_coordinate, good_reason, like_reason"
         })
     }
 
+    const { data: existingRating } = await supabase
+        .from('ratings')
+        .select('watch_number')
+        .eq('user_id', id)
+        .eq('media_id', body.media_id)
+        .single()
+
     const newRating = {
-        "id": generateId(id),
         "user_id": id,
         "media_id": body.media_id,
         "x_coordinate": body.x_coordinate,
         "y_coordinate": body.y_coordinate,
         "good_reason": body.good_reason,
         "like_reason": body.like_reason,
-        "context": body.context,
-        "watch_number": 1,
-        "created_at": date
+        "context": body.context || null,
+        "watch_number": existingRating ? existingRating.watch_number + 1 : 1
     }
 
-    ratings = ratings.concat(newRating)
-    response.status(201).json(newRating)
+    const { data, error } = await supabase
+        .from('ratings')
+        .insert([newRating])
+        .select('*, media (*)')
+
+    if (error) return response.status(500).json({ error: `Error inserting new rating: ${error.message}` })
+
+    response.status(201).json(data)
 })
 
 // API endpoint to modify a rating by user

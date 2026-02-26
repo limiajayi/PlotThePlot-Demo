@@ -16,7 +16,7 @@ const LoginPage = () => {
         setError(null);
         setLoading(true);
 
-        const { error, userId } = await login(formData.username, formData.password);
+        const { error } = await login(formData.username, formData.password);
 
         if (error) {
             setError(error);
@@ -26,7 +26,7 @@ const LoginPage = () => {
 
 
         // redirect them to their profile
-        navigate(`/users/${userId}/profile`);
+        navigate(`/users/${formData.username}/profile`);
     };
 
     return (

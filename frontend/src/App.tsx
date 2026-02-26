@@ -10,7 +10,7 @@ const PublicOnlyRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
 
   if (loading) return <div>Loading...</div>;
-  if (user) return <Navigate to={`/users/${user.id}/profile`} replace />;
+  if (user) return <Navigate to={`/users/${user.username}/profile`} replace />;
   return <>{children}</>;
 }
 
@@ -42,7 +42,7 @@ const App = () => {
 
               {/* Protected routes - redirect to login if not authenticated */}
               <Route 
-              path="/users/:userId/profile"
+              path="/users/:username/profile"
               element={
                 <ProtectedRoute>
                   <ProfilePage />

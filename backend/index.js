@@ -27,13 +27,6 @@ app.use('/api/users', usersRouter)
 app.use('/api/media', mediaRouter)
 app.use('/api/', ratingsRouter)
 
-
-
-supabase.from('users').select('*').then(({data, error}) => {
-    console.log('db reachable:', data)
-    console.log('error:', error)
-})
-
 const PORT = 3001
 app.listen(PORT, () => {
     console.log(`Backend Server running on port ${PORT}.`)

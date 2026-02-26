@@ -6,8 +6,8 @@ import { useState } from 'react';
 import useUser from '../../hooks/useUser';
 
 const ProfilePage = () => {
-    const { userId } = useParams<{ userId: string }>();
-    const { user, loading, error } = useUser(userId);
+    const { username } = useParams<{ username: string }>();
+    const { user, loading, error } = useUser(username);
     const [grid, setGrid] = useState(false); // toggle between the grid view and graph view of ratings
 
     if (loading) return <div>Loading...</div>;

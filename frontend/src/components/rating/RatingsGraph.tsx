@@ -14,7 +14,7 @@ type RatingsGraphProps = {
 
 const RatingsGraph = ({ user }: RatingsGraphProps) => {
     
-    const { ratings, loading, error } = useRatings();
+    const { ratings, error } = useRatings();
     const [isModalOpen, setIsModalOpen] = useState(false); // false when modal is closed, true when modal is open
     const [selectedCoordinates, setSelectedCoordinates] = useState<{ x: number, y: number }>({ x: 0, y: 0 }); // passed from scatter plot
     const [selectedRatings, setSelectedRatings] = useState<Ratings | null>(null);
@@ -105,8 +105,8 @@ const RatingsGraph = ({ user }: RatingsGraphProps) => {
         setSelectedCoordinates({ x: selectedRatings?.x_coordinate ?? 0, y: selectedRatings?.y_coordinate ?? 0 });
     }
 
-
-    if (loading) return <div>Loading graph...</div>;
+    //TODO: change useRatings hook
+    //if (loading) return <div>Loading graph...</div>;
     if (error) return <div>Error loading graph: {error}</div>;
 
     return (

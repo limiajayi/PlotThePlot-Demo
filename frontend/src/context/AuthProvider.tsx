@@ -26,7 +26,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     useEffect(() => {
-        // data is desctructured desctructured
+        // data is desctructured twice
         // get initial session
         supabase.auth.getSession().then(async ({ data: { session } }) => {
             setSession(session);
