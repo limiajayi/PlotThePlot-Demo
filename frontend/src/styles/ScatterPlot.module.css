@@ -1,0 +1,88 @@
+.wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.svg {
+    border-radius: 8px;
+    cursor: crosshair;
+}
+
+/* quadrant labels */
+.quadrantLabel {
+    font-family: 'DM Mono', monospace;
+    font-size: 18px;
+    font-weight: 500;
+    fill: rgba(0, 0, 0, 0.35);
+}
+
+/* axis labels */
+.axisLabel {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    fill: rgba(0, 0, 0, 0.45);
+}
+
+/* dots on the graph */
+.dot {
+    cursor: pointer;
+    opacity: 0.85;
+    transition: opacity 0.2s;
+}
+
+.tooltip {
+    position: fixed;
+    background: #1a0a2e;
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    pointer-events: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(145, 70, 255, 0.3);
+    max-width: 220px;
+    line-height: 1.5;
+    z-index: 9999;
+
+    /* fade in */
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.tooltip.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.tooltipTitle {
+    font-style: italic;
+    font-weight: 500;
+    font-size: 13px;
+    margin-bottom: 4px;
+    color: #fff;
+    display: block;
+}
+
+.tooltipCoords {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 11px;
+    display: block;
+}
+
+.tooltipType {
+    display: inline-block;
+    margin-top: 5px;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 20px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tooltipType.movie { background: rgba(33, 150, 243, 0.2); color: #90caf9; }
+.tooltipType.book  { background: rgba(76, 175, 80, 0.2);  color: #a5d6a7; }
+.tooltipType.show  { background: rgba(255, 152, 0, 0.2);  color: #ffcc80; }

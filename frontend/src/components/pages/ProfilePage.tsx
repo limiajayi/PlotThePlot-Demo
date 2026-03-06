@@ -13,6 +13,8 @@ const ProfilePage = () => {
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
     if (!user) return <div>User not found</div>;
+
+    // console.log(user);
     
     return (
         <div style={{ display: 'flex', justifyContent: 'space-around' }}>
@@ -26,9 +28,13 @@ const ProfilePage = () => {
                 </button>
                 <RatingSearch />
 
+               
+
                 {/* if grid then RatingsList else RatingsGraph */}
                 {grid ? <RatingsList user={user} /> :
                     <RatingsGraph user={user} />}
+                    
+                    
             </div>
         </div>
     );

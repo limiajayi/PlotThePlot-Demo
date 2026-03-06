@@ -19,7 +19,7 @@ const useUser = (username: string | undefined) => {
                 // setting up stuff for supabase
                 const { data, error } = await supabase
                                         .from('users')
-                                        .select('*')
+                                        .select('*, ratings (*, media (*))')
                                         .eq('username', username)
                                         .single();
                 

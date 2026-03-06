@@ -1,6 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Ratings } from "../../types/ratings.types";
 import * as d3 from 'd3';
+import styles from '../../styles/ScatterPlot.module.css';
 
 type ScatterPlotProps = {
     data: Ratings[];
@@ -18,11 +19,28 @@ type Quadrant = {
     color: string;
 };
 
+// Tooltip state — null means hidden
+type TooltipState = {
+    x: number;
+    y: number;
+    rating: Ratings;
+} | null;
+
+const getCssVar = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+// Dot style per media type: colour + distinct stroke treatment
+const DOT_STYLES: Record<string, { fill: string; stroke: string; strokeWidth: number; strokeDasharray: string }> = {
+    movie: { fill: '#2196F3', stroke: '#ffffff', strokeWidth: 2, strokeDasharray: 'none' },  // solid border
+    book:  { fill: '#4CAF50', stroke: '#ffffff', strokeWidth: 3, strokeDasharray: 'none'  },  // dashed border
+    show:  { fill: '#FF9800', stroke: '#ffffff', strokeWidth: 4, strokeDasharray: 'none' },  // thick solid ring
+};
+
 // TODO: What happens when a user has no ratings... empty svg 
 
 const ScatterPlot = ({ data, onCoordinateClick, onDotHover }: ScatterPlotProps) => {
 
     const svgRef = useRef<SVGSVGElement>(null); // useRef to control the svg DOM element
+    const [tooltip, setTooltip] = useState<TooltipState>(null);
 
     useEffect(() => {
 
@@ -61,10 +79,10 @@ const ScatterPlot = ({ data, onCoordinateClick, onDotHover }: ScatterPlotProps) 
         .range([innerHeight, 0])
 
         const quadrants: Quadrant[] = [
-            { x: 0, y: 0, width: innerWidth / 2, height: innerHeight / 2, label: "overhated",  color: "var(--orange)"},
-            { x: innerWidth / 2, y: 0, width: innerWidth / 2, height: innerHeight / 2, label: "over",  color: "var(--green)"},
-            { x: 0, y: innerHeight / 2, width: innerWidth / 2, height: innerHeight / 2, label: "under",  color: "var(--red)"},
-            { x: innerWidth / 2, y: innerHeight / 2, width: innerWidth / 2, height: innerHeight / 2, label: "overrated",  color:"var(--blue)"},
+            { x: 0, y: 0, width: innerWidth / 2, height: innerHeight / 2, label: "overhated",  color: getCssVar('--orange')},
+            { x: innerWidth / 2, y: 0, width: innerWidth / 2, height: innerHeight / 2, label: "over",  color: getCssVar('--green')},
+            { x: 0, y: innerHeight / 2, width: innerWidth / 2, height: innerHeight / 2, label: "under",  color: getCssVar('--red')},
+            { x: innerWidth / 2, y: innerHeight / 2, width: innerWidth / 2, height: innerHeight / 2, label: "overrated",  color: getCssVar('--blue')},
         ]
 
         // DRAWING BACKGROUND QUADRANTS
@@ -81,19 +99,16 @@ const ScatterPlot = ({ data, onCoordinateClick, onDotHover }: ScatterPlotProps) 
         .attr('opacity', 0.8);
 
         // quadrant labels
-        g.selectAll('.quadrant-label')
+        g.selectAll(`quadrant-label ${styles.quadrantLabel}`)
         .data(quadrants)
         .enter()
         .append('text')
-        .attr('class', 'quadrant-label')
+        .attr('class', `quadrant-label ${styles.quadrantLabel}`)
         .attr('x', d => d.x + d.width / 2)
         .attr('y', d => d.y + d.height / 2)
         .attr('text-anchor', 'middle')
         .attr('dominant-baseline', 'middle')
         .attr('font-size', '18px')
-        .style('fill', '#666')
-        .style('font-weight', '500')
-        .style('cursor', 'crosshair') // didnt want the I-beam when hovering over text
         .text(d => d.label);
 
         // DRAW AXES
@@ -107,14 +122,16 @@ const ScatterPlot = ({ data, onCoordinateClick, onDotHover }: ScatterPlotProps) 
         .attr('class', 'x-axis')
         .attr('transform', `translate(0, ${yScale(0)})`)
         .call(xAxis)
-        .style('stroke-width', 1);
+        .style('stroke-width', 1)
+        .style('opacity', 0.85);
 
         // Y-axis at x=0 (at the center)
         g.append('g')
         .attr('class', 'y-axis')
         .attr('transform', `translate(${xScale(0)}, 0)`) // switched because positive y goes down but ptp's positive y goes up
         .call(yAxis)
-        .style('stroke-width', 1);
+        .style('stroke-width', 1)
+        .style('opacity', 0.85);
 
         // adding axis labels
         // good
@@ -122,9 +139,7 @@ const ScatterPlot = ({ data, onCoordinateClick, onDotHover }: ScatterPlotProps) 
         .attr('x', innerWidth - 5)
         .attr('y', yScale(0) - 10) //  positioned at (1, 0.1)
         .attr('text-anchor', 'end')
-        .attr('font-size', '12px')
-        .attr('font-weight', '500')
-        .style('fill', '#666')
+        .attr('class', `${styles.axisLabel}`)
         .text('good');
 
         //bad
@@ -132,9 +147,7 @@ const ScatterPlot = ({ data, onCoordinateClick, onDotHover }: ScatterPlotProps) 
         .attr('x', 5)
         .attr('y', yScale(0) - 10)  //  positioned at (-1, 0.1)
         .attr('text-anchor', 'start')
-        .attr('font-size', '12px')
-        .attr('font-weight', '500')
-        .style('fill', '#666')
+        .attr('class', `${styles.axisLabel}`)
         .text('bad');
 
         // liked it
@@ -142,9 +155,7 @@ const ScatterPlot = ({ data, onCoordinateClick, onDotHover }: ScatterPlotProps) 
         .attr('x', xScale(0) + 10)
         .attr('y', 15)
         .attr('text-anchor', 'start')
-        .attr('font-size', '12px')
-        .attr('font-weight', '500')
-        .style('fill', '#666')
+        .attr('class', `${styles.axisLabel}`)
         .text('liked It');
 
         // disliked it
@@ -152,17 +163,15 @@ const ScatterPlot = ({ data, onCoordinateClick, onDotHover }: ScatterPlotProps) 
         .attr('x', xScale(0) + 10)
         .attr('y', innerHeight - 5) // so the text does not get cutoff
         .attr('text-anchor', 'start')
-        .attr('font-size', '12px')
-        .attr('font-weight', '500')
-        .style('fill', '#666')
+        .attr('class', `${styles.axisLabel}`)
         .text('disliked It');
 
-        // DRAWING THE RATINGS
-        const colorScale = d3.scaleOrdinal<string>()
-        .domain(['movie', 'book', 'show'])
-        .range(['#2196F3', '#4CAF50', '#FF9800']);
+        // // DRAWING THE RATINGS
+        // const colorScale = d3.scaleOrdinal<string>()
+        // .domain(['movie', 'book', 'show'])
+        // .range(['#2196F3', '#4CAF50', '#FF9800']);
 
-        const circles = g.selectAll<SVGCircleElement, Ratings>('.dot')
+        const circles = g.selectAll<SVGCircleElement, Ratings>(`.dot ${styles.dot}`)
         .data(data)
         .enter()
         .append('circle')
@@ -170,10 +179,12 @@ const ScatterPlot = ({ data, onCoordinateClick, onDotHover }: ScatterPlotProps) 
         .attr('cx', d => xScale(d.x_coordinate))
         .attr('cy', d => yScale(d.y_coordinate))
         .attr('r', 8)
-        .attr('fill', d => colorScale(d.media.media_type))
-        .attr('stroke-width', 2)
+        .attr('fill',             d => DOT_STYLES[d.media.media_type]?.fill         ?? '#888')
+        .attr('stroke',           d => DOT_STYLES[d.media.media_type]?.stroke       ?? '#fff')
+        .attr('stroke-width',     d => DOT_STYLES[d.media.media_type]?.strokeWidth  ?? 2)
+        .attr('stroke-dasharray', d => DOT_STYLES[d.media.media_type]?.strokeDasharray ?? 'none')
         .style('cursor', 'pointer')
-        .style('opacity', 0.8)
+        .style('opacity', 0.85);
 
         // ADD INTERACTIVITY
         // when you hover over a rating dot
@@ -191,31 +202,17 @@ const ScatterPlot = ({ data, onCoordinateClick, onDotHover }: ScatterPlotProps) 
             .transition()
             .duration(200)
             .attr('r', 8)
-            .style('opacity', 0.8)
-        })
-
-        // TOOLTIP : To see movie name and coordinates!
-        const tooltip = d3.select('body')
-        .append('div')
-        .style('position', 'absolute')
-        .style('background', 'rgba(0, 0, 0, 0.8)')
-        .style('color', 'white')
-        .style('padding', '8px 12px')
-        .style('border-radius', '4px')
-        .style('font-size', '12px')
-        .style('pointer-events', 'none')
-        .style('opacity', 0);
+            .style('opacity', 0.85);
+            setTooltip(null);
+        });
 
         // Mount the tool tip when the mouse hovers over a rating dot
         circles
         .on('mousemove', function(event: MouseEvent, d: Ratings) {
-            tooltip.style('opacity', 1)
-            .html(`<p><strong><i>${d.media.title}</i></strong></p>Coordinates: (${d.x_coordinate}, ${d.y_coordinate})`)
-            .style('left', (event.pageX + 10) + 'px')
-            .style('top', (event.pageY - 10) + 'px')
+            setTooltip({ x: event.clientX + 14, y: event.clientY - 14, rating: d });
         })
         .on('mouseout', function() {
-            tooltip.style('opacity', 0)
+            setTooltip(null);
         })
         .on('click', function(event, d: Ratings) {
             event.stopPropagation();
@@ -250,14 +247,11 @@ const ScatterPlot = ({ data, onCoordinateClick, onDotHover }: ScatterPlotProps) 
             }
         )
 
-        return () => {
-            tooltip.remove();
-        };
 
     }, [data, onCoordinateClick, onDotHover])
 
     return (
-        <div>
+        <div className={styles.wrapper}>
             
             <svg 
                 ref={svgRef}
@@ -265,6 +259,24 @@ const ScatterPlot = ({ data, onCoordinateClick, onDotHover }: ScatterPlotProps) 
                 height={600}
                 style={{ borderRadius: '8px' }}
             />
+
+            {tooltip && (
+                <div 
+                    className={`${styles.tooltip} ${styles.visible}`}
+                    style={{ left: tooltip.x, top: tooltip.y }}
+                >
+                    <span className={styles.tooltipTitle}>
+                        {tooltip.rating.media.title}
+                    </span>
+                    <span className={styles.tooltipCoords}>
+                        ({tooltip.rating.x_coordinate}, {tooltip.rating.y_coordinate})
+                    </span>
+                    <span className={`${styles.tooltipType} ${styles[tooltip.rating.media.media_type]}`}>
+                        {tooltip.rating.media.media_type}
+                    </span>
+
+                </div>
+            )}
         </div>
     );
 };
