@@ -1,82 +1,56 @@
+const { supabase } = require('../lib/supabase')
 const express = require('express')
 const router = express.Router()
 let media = require('../data/media')
 let ratings = require('../data/ratings')
 
-const generateId = () => {
-    const maxId = media.reduce((max, m) => m.id > max ? m.id : max, 0)
-    return (maxId + 1)
-}
-
 //API endpoint for searching media
 //basic search with a search type and media type
 //For example: http://localhost:3001/api/media?search=gladiator&type=movie
-router.get('/', (request, response) => {
+router.get('/', async (request, response) => {
     const search = request.query.search?.toLowerCase()
     const type = request.query.type
 
-    let results = media
+    let query = supabase
+        .from('media')
+        .select('*, ratings (*)');
     
-    if (search) {
-        results = results.filter(m => m.title.toLowerCase().includes(search))
+    if (search) query = query.ilike('title', `%${search}%`);
+
+    if (type) query = query.eq('media_type', type);
+
+    const { data, error } = await query;
+
+    if (error) {
+        console.log("Error fetching all media: ", error);
+        return response.json({ 
+            error: `Error fetching all media: ${error.message}`
+        });
     }
 
-    if (type) {
-        results = results.filter(m => m.media_type === type)
-    }
-
-    const mediaWithRatings = results.map(media => {
-        const data = ratings.filter(r => r.media_id === media.id)
-        console.log(data)
-        return {
-            ...media,
-            ratings: data,
-            rating_count: data.length
-        }
-    })
-
-    if (mediaWithRatings || mediaWithRatings.length >= 0) {
-        return response.json(mediaWithRatings)
-    } else {
-        return response.status(404).json({
-            error: "This query does not exist."
-        })
-    }
-})
-
-// API endpoint for all media
-// TODO: could add a way to filter for media types
-router.get('/', (request, response) => {
-    response.json(media)
-})
-
-// API endpoint for a specific medium
-router.get('/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const medium = media.find(m => m.id === id)
-
-    if (medium) {
-        return response.json(medium)
-    } else {
-        response.status(404).end()
-    }
-})
+    response.json(data);
+});
 
 // API endpoint for the ratings of a specific media
-router.get('/:id/ratings', (request, response) => {
-    const id = Number(request.params.id)
-    const mediaRatings = ratings.filter(rating => rating.media_id === id)
+router.get('/:id/ratings', async (request, response) => {
+    const id = request.params.id;
 
-    if (mediaRatings) {
-        return response.json(mediaRatings)
-    } else {
-        return response.status(404).json({
-            error: "This media does not exist."
-        })
+    const { data, error } = await supabase
+        .from('media')
+        .select('ratings (*)')
+        .eq('id', id);
+
+    if (error) {
+        console.log("Error fetching this medium: ", error);
+        return response.json({ 
+            error: `Error fetching all media: ${error.message}`
+        });
     }
+
+    response.json(data);
 })
 
-
+//TODO: add legitimate ways to post media
 router.post('/', (request, response) => {
     const body = request.body
 

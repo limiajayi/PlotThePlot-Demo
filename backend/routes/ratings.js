@@ -22,10 +22,10 @@ router.get('/users/:id/ratings', async (request, response) => {
     // for example:  http://localhost:3001/api/users/:userId/ratings
     // query:        http://localhost:3001/api/users/:userId/ratings?title=avengers&media_type=movie&quadrant=guilty-pleasure
 
-    const id = request.params.id
-    const title = request.query.title?.toLowerCase()
-    const quadrant = request.query.quadrant?.toLowerCase()
-    const media_type = request.query.media_type?.toLowerCase()
+    const id = request.params.id;
+    const title = request.query.title?.toLowerCase();
+    const quadrant = request.query.quadrant?.toLowerCase();
+    const media_type = request.query.media_type?.toLowerCase();
 
     let query = supabase
                 .from('ratings')
@@ -52,7 +52,7 @@ router.get('/users/:id/ratings', async (request, response) => {
     if (error) {
         console.log("Error: ", error)
         return response.status(404).json({
-            error: `Error fetching user ratings: ${error.cause}`
+            error: `Error fetching user ratings: ${error.message}`
         })
     }
 
@@ -121,41 +121,39 @@ router.post('/users/:id/ratings', async (request, response) => {
 })
 
 // API endpoint to modify a rating by user
-router.put('/users/:userId/ratings/:ratingId', (request, response) => {
+router.put('/users/:userId/ratings/:ratingId', async (request, response) => {
     const {userId, ratingId} = request.params
-    const rating = ratings.find(r => r.id === Number(ratingId))
     const body = request.body
 
-    if (!rating) {
-        return response.status(404).json({
-            error: "This rating does not exist"
-        })
-    } else if (rating.user_id !== Number(userId)) {
-        return response.status(403).json({
-            error: "This is not your rating."
-        })
-    }
-
-    ratings = ratings.filter(r => r.id !== Number(ratingId))
-
     const newRating = {
-        ...rating,
-        "x_coordinate": body.x_coordinate,
-        "y_coordinate": body.y_coordinate,
         "good_reason": body.good_reason,
         "like_reason": body.like_reason,
-        "context": body.context,
-        "watch_number": rating.watch_number + 1
+        "context": body.context || null,
     }
 
-    ratings = ratings.concat(newRating)
-    response.json(newRating)
+    const { data, error } = await supabase
+        .from('ratings')
+        .update(newRating)
+        .eq('id', ratingId)
+        .eq('user_id', userId)
+        .select('*, media (*)')
+
+        if (error) return response.status(500).json({ error: `Error updating ratings: ${error.message}.` })
+    
+    response.json(data)
 })
 
 //API endpoint to delete a user's rating
-router.delete('/users/:userId/ratings/:ratingId', (request, response) => {
-    const {userId, ratingId} = request.params
-    ratings = ratings.filter(r => r.id !== Number(ratingId) && r.user_id === Number(userId))
+router.delete('/users/:userId/ratings/:ratingId', async (request, response) => {
+    const { userId, ratingId } = request.params
+
+    const { error } = await supabase
+        .from('rating')
+        .delete()
+        .eq('id', ratingId)
+        .eq('user_id', userId)
+    
+    if (error) return response.status(500).json({ error: `Error deleting rating: ${error.message}` })
 
     response.status(204).end()
 })
