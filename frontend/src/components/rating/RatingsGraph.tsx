@@ -111,7 +111,7 @@ const RatingsGraph = ({ user }: RatingsGraphProps) => {
 
     return (
             <div>
-                <h2>Graph for {user?.username}</h2>
+                
                     {ratings.length === 0 && (
                         <div>
                             No ratings yet. Click the graph below to add a rating
@@ -120,11 +120,13 @@ const RatingsGraph = ({ user }: RatingsGraphProps) => {
                     
 
                     <ErrorBoundary FallbackComponent={() => <div>Error Detected</div>}>
-                        <ScatterPlot 
-                            data={ratings} 
-                            onCoordinateClick={handleCoordinateClick}
-                            onDotHover={setSelectedRatings}
-                        />
+                        <div style={{ display: 'flex', width: '95%', alignContent: 'center', justifyContent: 'center', padding: '24px' }}>
+                            <ScatterPlot 
+                                data={ratings} 
+                                onCoordinateClick={handleCoordinateClick}
+                                onDotHover={setSelectedRatings}
+                            />
+                        </div>
 
                         <Modal
                             isOpen={isModalOpen}
