@@ -1,0 +1,85 @@
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    padding: 24px;
+    background: var(--bg, #f5f3ee);
+}
+
+/* rating card */
+.card {
+    background: var(--surface, #fff);
+    border: 1px solid var(--border, #d8d4cc);
+    border-radius: 10px;
+    padding: 16px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.15s, transform 0.15s;
+}
+
+.card:hover {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0,88);
+    transform: translateY(-2px);
+}
+
+/* coloured strip at the top of the card */
+.colorStrip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+}
+
+/* media type badge */
+.mediaTypeBadge {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text-3, #9b9791);
+    margin-top: 8px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+/* title */
+.title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text, #1a1916);
+    margin-bottom: 4px;
+    line-height: 1.3;
+}
+
+/* coordinates */
+.coords {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text-2, #5c5a55);
+}
+
+/* quadrant badge */
+.quadrantBadge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 8px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-family: 'DM Mono', monospace;
+}
+
+.over      { background: var(--green, #94fd9d);  color: var(--green-dark, #2d7a35);  }
+.overhated { background: var(--orange, #fec789); color: var(--orange-dark, #8a5a10); }
+.overrated { background: var(--blue, #94a7f3);   color: var(--blue-dark, #2040a0);   }
+.under     { background: var(--red, #ffa5a5);    color: var(--red-dark, #8a2020);    }
+
+.empty {
+    padding: 48px 24px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-3, #9b9791);
+    font-family: 'DM Mono', monospace;
+}
+
