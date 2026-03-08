@@ -1,5 +1,6 @@
 import type { Ratings } from "../../types/ratings.types"
 import styles from "../../styles/RatingsDetail.module.css";
+import { useState } from "react";
 
 type RatingsDetailProps = {
     ratings: Ratings | null;
@@ -21,6 +22,7 @@ const MEDIA_EMOJI: Record<string, string> = {
 };
 
 const RatingsDetail = ({ ratings, onEdit, onDelete }: RatingsDetailProps) => {
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
     if (!ratings) return <div>Error loading rating details</div>;
 
@@ -80,6 +82,7 @@ const RatingsDetail = ({ ratings, onEdit, onDelete }: RatingsDetailProps) => {
 
             <div className={styles.divider}></div>
 
+
             {/* footer: delete (left) | edit (right) */}
             <div className={styles.footer}>
 
@@ -90,12 +93,37 @@ const RatingsDetail = ({ ratings, onEdit, onDelete }: RatingsDetailProps) => {
                 <div className={styles.footerRight}>
                     <button 
                         className={styles.btnDanger}
-                        onClick={onDelete}
+                        onClick={() => setShowDeleteConfirm(true)}
                     >
                         Delete
                     </button>
                 </div>
             </div>
+
+
+            {/* inline delete confirmation */}
+            {showDeleteConfirm && (
+                <div className={styles.deleteConfirm}>
+                    <p className={styles.deleteConfirmText}>
+                        Are you sure? This can't be undone
+                    </p>
+                    <div className={styles.deleteConfirmActions}>
+                        <button
+                            className={styles.btnSecondary}
+                            onClick={() => setShowDeleteConfirm(false)}
+                        >
+                            Cancel
+                        </button>
+                        
+                        <button
+                            className={styles.btnDanger}
+                            onClick={onDelete}
+                        >
+                            Confirm Delete
+                        </button>
+                    </div>
+                </div>
+            )}
 
         </div>
     );

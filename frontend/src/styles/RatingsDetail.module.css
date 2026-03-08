@@ -165,3 +165,24 @@
     background: #333;
 }
 
+/* inline delete confirmation */
+
+.deleteConfirm {
+    margin-top: 12px;
+    padding: 12px 14px;
+    background: #fff5f5;
+    border: 1px solid #ffcdd2;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #c0392b;
+}
+
+.deleteConfirmText {
+    margin: 0 0 10px 0;
+    font-weight: 500;
+}
+
+.deleteConfirmActions {
+    display: flex;
+    gap: 8px;
+}

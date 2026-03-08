@@ -252,7 +252,7 @@ const ScatterPlot = ({ data, onCoordinateClick, onDotHover }: ScatterPlotProps) 
     }, [data, onCoordinateClick, onDotHover])
 
     return (
-        <div className={styles.wrapper}>
+        <div>
             
             <svg 
                 className={styles.wrapper}
