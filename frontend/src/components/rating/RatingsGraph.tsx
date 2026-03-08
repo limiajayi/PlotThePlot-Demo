@@ -73,7 +73,7 @@ const RatingsGraph = ({ user }: RatingsGraphProps) => {
     // for when the user deletes a rating
     const handleDelete = async () => {
         if (!selectedRatings) return;
-        if (!confirm('Are you ure you want to delete this rating?')) return;
+        if (!confirm('Are you sure you want to delete this rating?')) return;
 
         try {
             const response = await fetch(
@@ -118,8 +118,6 @@ const RatingsGraph = ({ user }: RatingsGraphProps) => {
                         </div>
                     )}
                     
-
-
 
                     <ErrorBoundary FallbackComponent={() => <div>Error Detected</div>}>
                         <ScatterPlot 

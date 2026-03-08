@@ -220,6 +220,7 @@ const ScatterPlot = ({ data, onCoordinateClick, onDotHover }: ScatterPlotProps) 
             if (onDotHover && onCoordinateClick) {
                 onCoordinateClick(d.x_coordinate, d.y_coordinate);
                 onDotHover(d);
+                setTooltip(null);
             };
         });
 
@@ -254,10 +255,10 @@ const ScatterPlot = ({ data, onCoordinateClick, onDotHover }: ScatterPlotProps) 
         <div className={styles.wrapper}>
             
             <svg 
+                className={styles.wrapper}
                 ref={svgRef}
                 width={600}
                 height={600}
-                style={{ borderRadius: '8px' }}
             />
 
             {tooltip && (

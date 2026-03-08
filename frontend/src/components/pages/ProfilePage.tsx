@@ -10,15 +10,15 @@ const ProfilePage = () => {
     const { user, loading, error } = useUser(username);
     const [grid, setGrid] = useState(false); // toggle between the grid view and graph view of ratings
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>{error}</div>;
+    if (loading) return <div>Loading User...</div>;
+    if (error) return <div>{`Error loading user: ${error}`}</div>;
     if (!user) return <div>User not found</div>;
 
     // console.log(user);
     
     return (
-        <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', width: '70%' }}>
+        <div>
+            <div>
                 <h1>{user.username}'s profile</h1>
                 <button 
                     onClick={() => setGrid(prev => !prev)}
