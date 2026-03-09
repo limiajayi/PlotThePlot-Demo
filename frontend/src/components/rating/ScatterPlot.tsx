@@ -31,8 +31,8 @@ const getCssVar = (name: string) => getComputedStyle(document.documentElement).g
 // Dot style per media type: colour + distinct stroke treatment
 const DOT_STYLES: Record<string, { fill: string; stroke: string; strokeWidth: number; strokeDasharray: string }> = {
     movie: { fill: '#2196F3', stroke: '#ffffff', strokeWidth: 2, strokeDasharray: 'none' },  // solid border
-    book:  { fill: '#4CAF50', stroke: '#ffffff', strokeWidth: 3, strokeDasharray: 'none'  },  // dashed border
-    show:  { fill: '#FF9800', stroke: '#ffffff', strokeWidth: 4, strokeDasharray: 'none' },  // thick solid ring
+    book:  { fill: '#4CAF50', stroke: '#ffffff', strokeWidth: 2, strokeDasharray: 'none'  },  // dashed border
+    show:  { fill: '#FF9800', stroke: '#ffffff', strokeWidth: 2, strokeDasharray: 'none' },  // thick solid ring
 };
 
 // TODO: What happens when a user has no ratings... empty svg 

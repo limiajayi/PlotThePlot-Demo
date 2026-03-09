@@ -1,110 +1,121 @@
-import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import styles from "../../styles/RatingsSearch.module.css";
 
-type SearchFilters = {
-    title: string;
-    media_type: string;
-    quadrant: string;
-}
+// Media type option: 'all' clears the filter
+const MEDIA_TYPES = [
+    { label: 'All',    value: '' },
+    { label: '🎬 Movie', value: 'movie' },
+    { label: '📺 Show',  value: 'show' },
+    { label: '📖 Book',  value: 'book' },
+];
+
+// Quadrant options: each gets its own colour when active
+const QUADRANTS = [
+    { label: 'All',       value: '',          activeClass: styles.chipActive  },
+    { label: 'over',      value: 'over',      activeClass: styles.chipGreen   },
+    { label: 'overhated', value: 'overhated', activeClass: styles.chipOrange  },
+    { label: 'overrated', value: 'overrated', activeClass: styles.chipBlue    },
+    { label: 'under',     value: 'under',     activeClass: styles.chipRed     },
+];
+
 
 const RatingSearch = () => {
-    const [searchParams, setSearchParams] = useSearchParams(); // for what's in the search bar eg '/user/1/profile?title=gladiator&media_type=movie'
+    const [searchParams, setSearchParams] = useSearchParams(); 
 
-    // gets current filters from url
-    const [filters, setFilters] = useState<SearchFilters>({
-        title: searchParams.get('title') || '',
-        media_type: searchParams.get('media_type') || '',
-        quadrant: searchParams.get('quadrant') || ''
-    });
+    const currentType = searchParams.get('media_type') ?? '';
+    const currentQuadrant = searchParams.get('quadrant') ?? '';
+    const currentTitle = searchParams.get('title') ?? '';
 
-    // handles when a change is made in the form to either the title, media type or quadrant fields
-    const handleFilterChange = (field: keyof SearchFilters, value: string) => {
-        setFilters(prev => ({ ...prev, [field]: value }));
+   // Updates a single param in the URL without touching the others
+    const setParam = (key: string, value: string) => {
+        const next = new URLSearchParams(searchParams);
+        if (value) {
+            next.set(key, value);
+        } else {
+            next.delete(key);
+        }
+        setSearchParams(next);
     };
-
-    //handles when the url of the user changes
-    const handleSearch = () => {
-        //build the query string from filters
-        const params = new URLSearchParams();
-
-        if (filters.title) params.append('title', filters.title);
-        if (filters.media_type) params.append('media_type', filters.media_type);
-        if (filters.quadrant) params.append('quadrant', filters.quadrant);
-
-        //updates the URL with the new query parameters
-        setSearchParams(params)
-    };
-
-    //Clears URL parameters
-    const handleClear = () => {
-        setFilters({ title: '', media_type: '', quadrant: '' });
-        setSearchParams({})
-    }
 
     return (
-        <div style={{ padding: '2px', background: 'f5f5f5', borderRadius: '8px' }} >
-            <h3>Filter Ratings</h3>
+        
+        <div className={styles.filterSection}>
 
-            {/* Search by title */}
-            <div style={{ marginBottom: '10px' }}>
-                <label htmlFor="">Search by title:</label>
-                <input 
-                    type="text" 
-                    value={filters.title}
-                    onChange={({ target }) => handleFilterChange('title', target.value)}
-                    placeholder="Enter movie/book/show name..."
-                    style={{ width: '95%', padding: '8px' }}
-                />
-            </div>
+                {/* media chips */}
+                <div>
+                    <p className={styles.sectionTitle}>
+                        Media Type
+                    </p>
+                    <div className={styles.chipRow}>
+                        {/* destructuring label and value */}
+                        {MEDIA_TYPES.map(({ label, value }) => (
+                            <button
+                                key={value}
+                                className={`${styles.chip} ${currentType === value ? styles.chipActive : ''}`}
+                                onClick={() => setParam('media_type', value)}
+                            >
+                                {label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
 
-            {/* Search by media type */}
-            <div style={{ marginBottom: '10px' }}>
-                <label htmlFor="">Media Type:</label>
-                <select
-                    style={{ width: '95%', padding: '8px' }}
-                    value={filters.media_type}
-                    onChange={({ target }) => handleFilterChange('media_type', target.value)}    
-                >
-                        <option value="">All types</option>
-                        <option value="movie">Movie</option>
-                        <option value="book">Book</option>
-                        <option value="show">Show</option>
-                </select>
-            </div>
+                {/* quadrant chips */}
+                <div>
+                    <p className={styles.sectionTitle}>
+                        Quadrants
+                    </p>
+                    <div className={styles.chipRow}>
+                        {/* destructuring label, value and activeClass */}
+                        {QUADRANTS.map(({ label, value, activeClass }) => (
+                            <button
+                                key={value}
+                                className={`${styles.chip} ${currentQuadrant === value ? activeClass : ''}`}
+                                onClick={() => setParam('quadrant', value)}
+                            >
+                                {label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
 
-            {/* Search by quadrant */}
-            <div style={{ marginBottom: '10px' }}>
-                <label htmlFor="">Quadrant:</label>
-                <select
-                    style={{ width: '95%', padding: '8px' }}
-                    value={filters.quadrant}
-                    onChange={({ target }) => handleFilterChange('quadrant', target.value)}    
-                >
-                        <option value="">All quadrants</option>
-                        <option value="over">over</option>
-                        <option value="overhated">overhated</option>
-                        <option value="overrated">overrated</option>
-                        <option value="under">under</option>
-                </select>
-            </div>
+                {/* title box */}
+                <div>
+                    <p className={styles.sectionTitle}>
+                        Search title
+                    </p>
+                    <div className={styles.inputGroup}>
+                        <input 
+                            className={styles.input}
+                            type="text" 
+                            placeholder="e.g. Gladiator"
+                            value={currentTitle}
+                            onChange={({ target }) => setParam('title', target.value)}
+                        />
+                    </div>
+                </div>
 
-            <div style={{ display: 'flex', gap: '10px' }} >
-                <button onClick={handleSearch} style={{ padding: '8px 16px' }}>
-                    Apply Filters
-                </button>
-                <button onClick={handleClear} style={{ padding: '8px 16px' }}>
-                    Clear Filters
-                </button>
-            </div>
+                {/* media type legend - for the graph view */}
+                <div className={styles.legend}>
+                    <div className={styles.legendItem}>
+                        <span className={styles.legendDot} style={{ background: '#2196F3' }} />
+                        Movie
+                    </div>
+
+                    <div className={styles.legendItem}>
+                        <span className={styles.legendDot} style={{ background: '#4CAF50' }} />
+                        Book
+                    </div>
+
+                    <div className={styles.legendItem}>
+                        <span className={styles.legendDot} style={{ background: '#FF9800' }} />
+                        Show
+                    </div>
+                </div>
+
         </div>
     )
 
-
-    return (
-        <div>
-            
-        </div>
-    )
 
 }
 

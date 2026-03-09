@@ -1,0 +1,118 @@
+/* section wrapper */
+
+.filterSection {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* section heading */
+
+.sectionTitle {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-3, '9b9791');
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-family: 'DM Mono', monospace;
+}
+
+/* chip rows */
+.chipRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.chip {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    background: var(--surface-2, #eeece7);
+    border: 1px solid var(--border, #d8d4cc);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text, #1a1916);
+}
+
+.chip:hover {
+    border-color: var(--border-strong, #aaa);
+}
+
+/* active states - neutral (all) */
+.chipActive {
+    background: var(--text, #1a1916);
+    color: #fff;
+    border-color: var(--text, #1a1916);
+}
+
+/* active states — quadrant colours */
+.chipGreen {
+    background: var(--green, #94fd9d);
+    color: var(--green-dark, #2d7a35);
+    border-color: var(--green, #94fd9d);
+}
+
+.chipOrange {
+    background: var(--orange, #fec789);
+    color: var(--orange-dark, #8a5a10);
+    border-color: var(--orange, #fec789);
+}
+
+.chipBlue {
+    background: var(--blue, #94a7f3);
+    color: var(--blue-dark, #2040a0);
+    border-color: var(--blue, #94a7f3);
+}
+
+.chipRed {
+    background: var(--red, #ffa5a5);
+    color: var(--red-dark, #8a2020);
+    border-color: var(--red, #ffa5a5);
+}
+
+/* title search input */
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.input {
+    padding: 8px 12px;
+    border: 1px solid var(--border, #d8d4cc);
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    background: var(--surface, #fff);
+    color: var(--text, #1a1916);
+    transition: border-color 0.15s;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--text, #1a1916);
+}
+
+.input::placeholder {
+    color: var(--text-3, #9b9791);
+}
+
+.legendItem {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text-2, #5c5a55);
+}
+
+.legendDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
