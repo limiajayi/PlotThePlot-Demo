@@ -1,24 +1,12 @@
 import type { Ratings } from "../../types/ratings.types"
 import styles from "../../styles/RatingsDetail.module.css";
 import { useState } from "react";
+import { MEDIA_EMOJI, getQuadrant } from "../../utils/helpers";
 
 type RatingsDetailProps = {
     ratings: Ratings | null;
     onEdit?: () => void;
     onDelete?: () => void;
-};
-
-const getQuadrant = (x: number, y: number): string => {
-    if (x >= 0 && y >= 0) return "over";
-    if (x <= 0 && y >= 0) return "overhated";
-    if (x >= 0 && y <= 0) return "overrated";
-    return "under"
-};
-
-const MEDIA_EMOJI: Record<string, string> = {
-    movie: "🎬",
-    book: "📖",
-    show: "📺"
 };
 
 const RatingsDetail = ({ ratings, onEdit, onDelete }: RatingsDetailProps) => {

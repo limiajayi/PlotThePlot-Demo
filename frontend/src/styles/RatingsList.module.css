@@ -1,6 +1,6 @@
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(4, minmax(200px, 1fr));
     gap: 12px;
     padding: 24px;
     background: var(--bg, #f5f3ee);
@@ -16,6 +16,7 @@
     position: relative;
     overflow: hidden;
     transition: box-shadow 0.15s, transform 0.15s;
+    height: 20vh;
 }
 
 .card:hover {

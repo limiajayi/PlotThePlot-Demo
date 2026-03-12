@@ -1,38 +1,15 @@
-import { type User } from '../../types/user.types';
 import styles from "../../styles/RatingsList.module.css"
 import { useState } from 'react';
 import type { Ratings } from '../../types/ratings.types';
 import Modal from 'react-modal';
 import RatingsDetail from './RatingsDetail';
+import { MEDIA_EMOJI, getQuadrant, QUADRANT_COLOR } from "../../utils/helpers";
 
 type RatingsListProps = {
-    user: User;
+    ratings: Ratings[];
 }
 
-const MEDIA_EMOJI: Record<string, string> = {
-    movie: '🎬',
-    book:  '📖',
-    show:  '📺',
-};
-
-// Same quadrant logic as RatingsDetail
-const getQuadrant = (x: number, y: number): string => {
-    if (x >= 0 && y >= 0) return 'over';
-    if (x < 0  && y >= 0) return 'overhated';
-    if (x >= 0 && y < 0)  return 'overrated';
-    return 'under';
-};
-
-// Maps quadrant name to the CSS variable used for the colour strip
-const QUADRANT_COLOR: Record<string, string> = {
-    over:      'var(--green)',
-    overhated: 'var(--orange)',
-    overrated: 'var(--blue)',
-    under:     'var(--red)',
-};
-
-const RatingsList = ({ user }: RatingsListProps) => {
-    const { ratings } = user;
+const RatingsList = ({ ratings }: RatingsListProps) => {
 
     const [selectedRating, setSelectedRating] = useState<Ratings | null>(null);
 

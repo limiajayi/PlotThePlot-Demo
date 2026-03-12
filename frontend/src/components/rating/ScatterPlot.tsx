@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { Ratings } from "../../types/ratings.types";
 import * as d3 from 'd3';
 import styles from '../../styles/ScatterPlot.module.css';
+import { DOT_STYLES } from "../../utils/helpers";
 
 type ScatterPlotProps = {
     data: Ratings[];
@@ -28,12 +29,7 @@ type TooltipState = {
 
 const getCssVar = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
-// Dot style per media type: colour + distinct stroke treatment
-const DOT_STYLES: Record<string, { fill: string; stroke: string; strokeWidth: number; strokeDasharray: string }> = {
-    movie: { fill: '#2196F3', stroke: '#ffffff', strokeWidth: 2, strokeDasharray: 'none' },  // solid border
-    book:  { fill: '#4CAF50', stroke: '#ffffff', strokeWidth: 2, strokeDasharray: 'none'  },  // dashed border
-    show:  { fill: '#FF9800', stroke: '#ffffff', strokeWidth: 2, strokeDasharray: 'none' },  // thick solid ring
-};
+
 
 // TODO: What happens when a user has no ratings... empty svg 
 

@@ -1,4 +1,3 @@
-import type { User } from "../../types/user.types";
 import { ErrorBoundary } from "react-error-boundary";
 // import useRatings from "../../hooks/useRatings";
 import ScatterPlot from "./ScatterPlot";
@@ -7,14 +6,15 @@ import Modal from "react-modal";
 import RatingsForm from "./RatingsForm";
 import type { NewRating, Ratings } from "../../types/ratings.types";
 import RatingsDetail from "./RatingsDetail";
+import type { User } from "../../types/user.types";
 
 type RatingsGraphProps = {
     user: User;
+    ratings: Ratings[];
 }
 
-const RatingsGraph = ({ user }: RatingsGraphProps) => {
+const RatingsGraph = ({ user, ratings }: RatingsGraphProps) => {
     
-    const { ratings } = user;
     const [isModalOpen, setIsModalOpen] = useState(false); // false when modal is closed, true when modal is open
     const [selectedCoordinates, setSelectedCoordinates] = useState<{ x: number, y: number }>({ x: 0, y: 0 }); // passed from scatter plot
     const [selectedRatings, setSelectedRatings] = useState<Ratings | null>(null);

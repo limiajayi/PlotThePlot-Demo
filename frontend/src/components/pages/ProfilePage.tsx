@@ -1,13 +1,17 @@
 import RatingsList from '../rating/RatingsList';
 import RatingSearch from '../rating/RatingsSearch';
 import RatingsGraph from '../rating/RatingsGraph';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useState } from 'react';
 import useUser from '../../hooks/useUser';
-import styles from '../../styles/ProfilePage.module.css'
+import styles from '../../styles/ProfilePage.module.css';
+import type { Ratings } from '../../types/ratings.types';
+import { getQuadrant } from '../../utils/helpers';
+
 
 const ProfilePage = () => {
     const { username } = useParams<{ username: string }>();
+    const [searchParams] = useSearchParams();
     const { user, loading, error } = useUser(username);
     const [grid, setGrid] = useState(false); // toggle between the grid view and graph view of ratings
 
@@ -16,6 +20,17 @@ const ProfilePage = () => {
     if (!user) return <p className={styles.stateMsg}>User not found</p>;
 
     const avatarLetter = user.username[0].toUpperCase();
+
+    const mediaType = searchParams.get('media_type') ?? '';
+    const quadrant = searchParams.get('quadrant') ?? '';
+    const title = searchParams.get('title') ?? '';
+
+    const filteredRatings: Ratings[] = user.ratings.filter(r => {
+        if (mediaType && r.media.media_type !== mediaType) return false;
+        if (quadrant && getQuadrant(r.x_coordinate, r.y_coordinate) !== quadrant) return false;
+        if (title && !r.media.title.toLowerCase().includes(title.toLowerCase())) return false;
+        return true;
+    });
     
     return (
         <div className={styles.layout}>
@@ -85,8 +100,8 @@ const ProfilePage = () => {
                 </aside>
 
                 {/* if grid then RatingsList else RatingsGraph */}
-                {grid ? <RatingsList user={user} /> :
-                    <RatingsGraph user={user} />}
+                {grid ? <RatingsList ratings={filteredRatings} /> :
+                    <RatingsGraph user={user} ratings={filteredRatings} />}
                     
                     
             </div>
