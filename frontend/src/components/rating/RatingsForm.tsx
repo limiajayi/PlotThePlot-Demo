@@ -1,6 +1,8 @@
 import { useState } from "react";
 import type { NewRating, Ratings } from "../../types/ratings.types";
 import type { Media } from "../../types/media.types";
+import { getQuadrant, MEDIA_DOT_COLOR } from "../../utils/helpers";
+import styles from "../../styles/RatingsForm.module.css";
 
 type RatingsFormProps = {
     coordinates: { x: number, y: number };
@@ -13,12 +15,14 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: Ratings
 
     const [searchQuery, setSearchQuery] = useState(''); // passed to useParams then the backend to return the media we need
     const [searchResults, setSearchResults] = useState<Media[]>([]); 
-    const [selectedMedia, setSelectedMedia] = useState<Media | null>(editingRating?.media || null);
+    const [selectedMedia, setSelectedMedia] = useState<Media | null>(editingRating?.media ?? null);
     const [formData, setFormData] = useState({
-        good_reason: editingRating?.good_reason || '',
-        like_reason: editingRating?.like_reason || '',
-        context: editingRating?.context || ''
+        good_reason: editingRating?.good_reason ?? '',
+        like_reason: editingRating?.like_reason ?? '',
+        context: editingRating?.context ?? ''
     });
+
+    const quadrant = getQuadrant(coordinates.x, coordinates.y);
 
     // queries the backend to find the appropriate media results
     const handleSearch = async () => {
@@ -50,14 +54,6 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: Ratings
         onSubmit(newRating)
     }
 
-    // Determine quadrant for display
-    const getQuadrant = () => {
-        if (coordinates.x >= 0 && coordinates.y >= 0) return 'Over';
-        if (coordinates.x < 0 && coordinates.y >= 0) return 'Overhated';
-        if (coordinates.x >= 0 && coordinates.y < 0) return 'Overrated';
-        return 'Under';
-    };
-
 
     return (
         <form onSubmit={handleSubmit}>
@@ -66,47 +62,90 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: Ratings
                     Note: To change coordinates, delete this rating and create a new one.
                 </p>
             )}
-            <h3>Rate { editingRating ? "" : "New" } Media</h3>
-            <div style={{ width: '95%', marginBottom: '15px', padding: '5px', background: '#f5f5f5', borderRadius: '5px' }}>
-                {/* Shows the user what coordinates they picked */}
-                    {coordinates && (
-                        <>
-                        <p><strong>Coordinates: </strong> ({coordinates.x} , {coordinates.y})</p>
-                        <p><strong>Quadrant: </strong> {getQuadrant()}</p>
-                        </>
-                    )}
+            
+            
+            {/* header */}
+            <div className={styles.header}>
+                <h3 className={styles.title}>
+                    {editingRating ? 'Editing Rating' : 'Rating Media'}
+                </h3>
             </div>
 
+            {/* coordinate display */}
+            <div className={styles.coordDisplay}>
+                <div className={styles.coordItem}>
+
+                    <span className={styles.coordLabel}>X (good / bad)</span>
+                    <span className={styles.coordValue}>{coordinates.x}</span>
+
+                </div>
+                <div className={styles.coordItem}>
+
+                    <span className={styles.coordLabel}>Y (liked  / disliked)</span>
+                    <span className={styles.coordValue}>{coordinates.y}</span>
+
+                </div>
+                <span className={`${styles.quadrantBadge} ${styles[quadrant]}`}>
+                    {quadrant}
+                </span>
+            </div>
+
+            {editingRating && (
+                <p className={styles.editNote}>
+                    Coordinates are locked. Delete or rate this media again to change coordinate position.
+                </p>
+            )}
+
+
+
             {/* Search media only if not selectedMedia is empty */}
+            {/* Media Search */}
 
             {!selectedMedia ? (
-                <div>
-                    {/* Search for media input box */}
-                    <label>Title:</label>
-                    <div>
+                <div className={styles.inputGroup}>
+                    
+                    <label className={styles.label}>Search for title</label>
+
+                    <div className={styles.searchRow}>
                         <input 
+                            className={styles.input}
                             type="text" 
                             value={searchQuery}
                             onChange={({ target }) => setSearchQuery(target.value)}
-                            placeholder="Search for media..."
-                            style={{ width: '95%', padding: '8px', borderRadius: '8px', border: '1px solid #252525' }}
-                            // required
+                            placeholder="e.g. The Godfather..."
+                            
+                            
                         />
-                        <button type="button" onClick={handleSearch}>
+
+                        <button 
+                            className={`${styles.btnSecondary} ${styles.btnSmall}`}
+                            type="button" 
+                            onClick={handleSearch}
+                        >
                             Search
                         </button>
                     </div>
 
                     {/* Search results dropdown */}
                     {searchResults?.length > 0 && (
-                        <div>
+                        <div className={styles.searchResults}>
                             {searchResults.map(media => (
                                 <div 
+                                    className={styles.searchRedultItem}
                                     key={media.id} 
                                     onClick={() => handleMediaSelect(media)}
                                     style={{ padding: '8px', cursor: 'pointer', border: '1px solid #eee', borderRadius: '8px' }}
                                 >
-                                    <strong>{media.title}</strong> ({media.media_type})
+
+                                    <span 
+                                        className={styles.mediaTypeDot}
+                                        style={{ background: MEDIA_DOT_COLOR[media.media_type] ?? '#888' }}
+                                    />
+
+                                    <div>
+                                        <p className={styles.mediaTitle}>{media.title}</p>
+                                        <p className={styles.mediaMeta}>{styles.media_type}</p>
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -114,11 +153,24 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: Ratings
                 </div>
                 
             ) : (
-                <div>
+                // selected media row
+                <div className={styles.selectedMediaRow}>
                     {/* if the user wants to change their choice */}
 
-                    <p><strong>Selected:</strong> {selectedMedia.title} ({selectedMedia.media_type})</p>
-                    <button type="button" onClick={() => setSelectedMedia(null)}>
+                    <span 
+                        className={styles.mediaTypeDot}
+                        style={{ background: MEDIA_DOT_COLOR[selectedMedia.media_type] ?? '#888' }}
+                    />
+                    <span className={styles.selectedMediaTitle}>
+                        {selectedMedia.title}
+                        <span className={styles.mediaMeta}> · {selectedMedia.media_type}</span>
+                    </span>
+                    
+                    <button 
+                        className={styles.btnGhost}
+                        type="button" 
+                        onClick={() => setSelectedMedia(null)}
+                    >
                         Change
                     </button>
                 </div>
@@ -128,36 +180,51 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: Ratings
             {selectedMedia && (
                 <>
                     {/* x axis */}
-                    <div>
-                        <label>Why was it good / bad?</label>
-                        <br />
-                        <textarea 
+                    <div className={styles.inputGroup}>
+                        <label className={styles.label}>
+                            Why was it good / bad?
+
+                            <span className={styles.labelHint}>(x axis)</span>
+                        </label>
+                        
+                        <textarea
+                            className={styles.textarea}
                             value={formData.good_reason}
                             onChange={({ target }) => setFormData(prev => ({ ...prev, good_reason: target.value }))}
-                            style={{ width: '95%', borderRadius: '8px', border: '1px solid #252525' }}
+                            placeholder="The writing was tight but the pacing dragged in act 2..."
                         />
                         
                     </div>
 
                     {/* y axis */}
-                    <div>
-                        <label>Why did you like it / dislike it?</label>
-                        <br />
+                    <div className={styles.inputGroup}>
+                        <label className={styles.label}>
+                            Why did you like it / dislike it?
+
+                            <span className={styles.labelHint}>(y axis)</span>
+                        </label>
+                        
                         <textarea 
+                            className={styles.textarea}
                             value={formData.like_reason}
                             onChange={({ target }) => setFormData(prev => ({ ...prev, like_reason: target.value }))}
-                            style={{ width: '95%', borderRadius: '8px', border: '1px solid #252525' }}
+                            placeholder="Despite all it's flaws I still loved how sincere it was..."
                         />
                     </div>
 
                     {/* context */}
-                    <div>
-                        <label>Context (optional)</label>
+                    <div className={styles.inputGroup}>
+                        <label className={styles.label}>
+                            Context
+
+                            <span className={styles.labelHint}>(optional)</span>
+                        </label>
                         <br />
                         <textarea 
+                            className={styles.textarea}
                             value={formData.context}
                             onChange={({ target }) => setFormData(prev => ({ ...prev, context: target.value }))}
-                            style={{ width: '95%', borderRadius: '8px', border: '1px solid #252525' }}
+                            placeholder="Watched it on a flight, tired, might rewatch..."
                         />
                     </div>
 

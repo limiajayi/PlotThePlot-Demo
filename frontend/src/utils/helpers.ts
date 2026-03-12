@@ -24,3 +24,9 @@ export const DOT_STYLES: Record<string, { fill: string; stroke: string; strokeWi
     book:  { fill: '#4CAF50', stroke: '#ffffff', strokeWidth: 2, strokeDasharray: 'none'  },  // dashed border
     show:  { fill: '#FF9800', stroke: '#ffffff', strokeWidth: 2, strokeDasharray: 'none' },  // thick solid ring
 };
+
+export const MEDIA_DOT_COLOR: Record<string, string> = {
+    movie: '#2196F3',
+    book:  '#4CAF50',
+    show:  '#FF9800',
+};
