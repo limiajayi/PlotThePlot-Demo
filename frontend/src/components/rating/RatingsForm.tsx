@@ -167,7 +167,7 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: Ratings
                     </span>
                     
                     <button 
-                        className={styles.btnGhost}
+                        className={`${styles.btnGhost} ${styles.btnSecondary}`}
                         type="button" 
                         onClick={() => setSelectedMedia(null)}
                     >
@@ -228,15 +228,23 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: Ratings
                         />
                     </div>
 
-                    <button type="submit">
-                        Submit Rating
-                    </button>
                 </>
             )}
 
-            <button type="button" onClick={onCancel}>
-                Cancel
-            </button>
+            {/* footer */}
+
+            <div className={styles.footer}>
+                    <button className={styles.btnSecondary} type="button" onClick={onCancel}>
+                        Cancel
+                    </button>
+
+                    {selectedMedia && (
+                        <button className={styles.btnPrimary} type="submit">
+                            Submit Rating →
+                        </button>
+                    )}
+            </div>
+
 
         </form>
     );
