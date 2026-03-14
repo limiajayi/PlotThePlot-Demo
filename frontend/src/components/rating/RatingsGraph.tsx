@@ -73,11 +73,10 @@ const RatingsGraph = ({ user, ratings }: RatingsGraphProps) => {
     // for when the user deletes a rating
     const handleDelete = async () => {
         if (!selectedRatings) return;
-        if (!confirm('Are you sure you want to delete this rating?')) return;
 
         try {
             const response = await fetch(
-                `http://localhost:3001/api/users/${user.id.toString()}/ratings/${selectedRatings.id}`,
+                `http://localhost:3001/api/users/${user.id}/ratings/${selectedRatings.id}`,
                 { method: 'DELETE' }
             );
 

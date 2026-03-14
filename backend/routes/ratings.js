@@ -148,12 +148,15 @@ router.delete('/users/:userId/ratings/:ratingId', async (request, response) => {
     const { userId, ratingId } = request.params
 
     const { error } = await supabase
-        .from('rating')
+        .from('ratings')
         .delete()
         .eq('id', ratingId)
         .eq('user_id', userId)
     
-    if (error) return response.status(500).json({ error: `Error deleting rating: ${error.message}` })
+    if (error) {
+        console.log(`Error deleting this rating ${error.message}`);
+        return response.status(500).json({ error: `Error deleting rating: ${error.message}` })
+    }
 
     response.status(204).end()
 })

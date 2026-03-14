@@ -16,7 +16,7 @@ const PublicOnlyRoute = ({ children }: { children: React.ReactNode }) => {
 
 const App = () => {
   return (
-      <div>
+      <>
         <BrowserRouter>
           <AuthProvider>
             <Routes>
@@ -57,7 +57,7 @@ const App = () => {
             </Routes>
           </AuthProvider>
         </BrowserRouter>
-      </div>
+      </>
   )
 }
 
