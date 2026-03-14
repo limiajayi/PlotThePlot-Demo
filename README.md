@@ -6,6 +6,8 @@ A media rating platform that captures the complexity of how we actually experien
 
 ![The same two dimensional scatter plot showing more movies and books on an X-Y coordinate grid.](/assets/PTP-2.png)
 
+![PlotThePlot render of the 2D graph with my own ratings](/assets/PTP-4.png)
+
 ## 🌟 What is PlotThePlot?
 
 Traditional rating systems force us to collapse complex feelings into oversimplified metrics (⭐⭐⭐⭐). PlotThePlot uses a **two-dimensional coordinate system** that separates "quality" from "personal enjoyment":
