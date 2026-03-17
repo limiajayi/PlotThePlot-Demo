@@ -5,6 +5,7 @@ const app = express()
 const usersRouter = require('./routes/users')
 const mediaRouter = require('./routes/media')
 const ratingsRouter = require('./routes/ratings')
+const mediaSearchRouter = require('./routes/mediaSearch');
 const cors = require('cors')
 
 //middleware for me to see what each request looks like
@@ -18,14 +19,15 @@ const requestLogger = (request, response, next) => {
 }
 
 // helps to convert the request body into a JSON format
-app.use(express.json())
-app.use(requestLogger)
-app.use(cors())
+app.use(express.json());
+app.use(requestLogger);
+app.use(cors());
 
 // Route handlers
-app.use('/api/users', usersRouter)
-app.use('/api/media', mediaRouter)
-app.use('/api/', ratingsRouter)
+app.use('/api/users', usersRouter);
+app.use('/api/media', mediaRouter);
+app.use('/api/media/search', mediaSearchRouter);
+app.use('/api/', ratingsRouter);
 
 const PORT = 3001
 app.listen(PORT, () => {
