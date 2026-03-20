@@ -1,4 +1,4 @@
-import { type Media } from "./media.types";
+import { type Media, type ExternalMediaResult } from "./media.types";
 
 export type Ratings = {
     id: number;
@@ -14,4 +14,11 @@ export type Ratings = {
     media: Media
 };
 
-export type NewRating = Omit<Ratings, 'id' | 'user_id' | 'created_at' | 'media'>;
+export type NewRating = {
+    media: ExternalMediaResult;
+    x_coordinate: number;
+    y_coordinate: number;
+    good_reason: string;
+    like_reason: string;
+    context?: string;
+}
