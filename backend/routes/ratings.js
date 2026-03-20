@@ -86,38 +86,82 @@ router.post('/users/:id/ratings', async (request, response) => {
     const id = request.params.id
 
      // validate required fields
-    if (!body.media_id || !body.x_coordinate || !body.y_coordinate || !body.good_reason || !body.like_reason) {
+    if (!body.media || !body.x_coordinate || !body.y_coordinate || !body.good_reason || !body.like_reason) {
         return response.status(400).json({
-            error: "Missing required fields: media_id, x_coordinate, y_coordinate, good_reason, like_reason"
+            error: "Missing required fields: media, x_coordinate, y_coordinate, good_reason, like_reason"
         })
     }
 
+    // -- upserting media --
+    const { tmdb_id, isbn, title, media_type, release_year, cover_image_url, creator } = body.media;
+
+    const lookupColumn = media_type === 'book' ? 'isbn' : 'tmdb_id';
+    const lookupValue = media_type === 'book' ? isbn : tmdb_id;
+
+    if (!lookupValue) {
+        console.log('Missing isbn or tmdb_id');
+        return response.status(400).json({ error: 'Media is missing a valid external identifier (tmdb_id or isbn)' })
+    }
+
+    let mediaId;
+
+    // initially searching in supabase to see if the media exists
+    const { data: existingMedia } = await supabase
+        .from('media')
+        .select('id')
+        .eq(lookupColumn, lookupValue)
+        .single();
+
+    // if the media exists, 
+    // assign mediaId to the id of the existing media
+    if (existingMedia) {
+        mediaId = existingMedia.id
+    } else {
+        const { data: newMedia, error: mediaError } = await supabase
+            .from('media')
+            .insert([{ title, media_type, release_year, tmdb_id, isbn, cover_image_url, creator }])
+            .select('id')
+            .single();
+
+        if (mediaError) {
+            console.log(mediaError);
+            return response.status(500).json({ error: `Failed to create media: ${mediaError.message}` });
+        }
+
+        mediaId = newMedia.id;
+    }
+
+    // inserting rating
+
+    // if the rating exists we need the highest watch number
     const { data: existingRating } = await supabase
         .from('ratings')
         .select('watch_number')
         .eq('user_id', id)
-        .eq('media_id', body.media_id)
+        .eq('media_id', mediaId)
+        .order('watch_number', { ascending: false })
+        .limit(1)
         .single()
 
     const newRating = {
-        "user_id": id,
-        "media_id": body.media_id,
-        "x_coordinate": body.x_coordinate,
-        "y_coordinate": body.y_coordinate,
-        "good_reason": body.good_reason,
-        "like_reason": body.like_reason,
-        "context": body.context || null,
-        "watch_number": existingRating ? existingRating.watch_number + 1 : 1
-    }
+        user_id: id,
+        media_id: mediaId,
+        x_coordinate: body.x_coordinate,
+        y_coordinate: body.y_coordinate,
+        good_reason: body.good_reason,
+        like_reason: body.like_reason,
+        context: body.context || null,
+        watch_number: existingRating ? existingRating.watch_number + 1 : 1
+    };
 
     const { data, error } = await supabase
         .from('ratings')
         .insert([newRating])
-        .select('*, media (*)')
+        .select('*, media (*)');
 
-    if (error) return response.status(500).json({ error: `Error inserting new rating: ${error.message}` })
+    if (error) return response.status(500).json({ error: `Error inserting new rating: ${error.message}` });
 
-    response.status(201).json(data)
+    response.status(201).json(data);
 })
 
 // API endpoint to modify a rating by user

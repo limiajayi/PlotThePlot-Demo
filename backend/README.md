@@ -59,6 +59,7 @@ The server will start on `http://localhost:3001`
 - Basic validation implemented for required fields
 
 ## Middleware
+
 - `express.json()` - Parse JSON request bodies
 - `requestLogger` - Logs all incoming requests (method, path, body)
 
