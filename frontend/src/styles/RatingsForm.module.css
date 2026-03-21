@@ -257,3 +257,34 @@
 .btnGhost {
     background: var(--surface-2, #eeece7);
 }
+
+/* chip rows */
+.chipRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.chip {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    background: var(--surface-2, #eeece7);
+    border: 1px solid var(--border, #d8d4cc);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text, #1a1916);
+}
+
+.chip:hover {
+    border-color: var(--border-strong, #aaa);
+}
+
+/* active states - neutral (all) */
+.chipActive {
+    background: var(--text, #1a1916);
+    color: #fff;
+    border-color: var(--text, #1a1916);
+}

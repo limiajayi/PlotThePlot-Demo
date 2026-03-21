@@ -18,3 +18,5 @@ export type ExternalMediaResult = {
     cover_image_url: string | null;
     creator: string | null;
 }
+
+export type MediaType = 'movie' | 'show' | 'book';

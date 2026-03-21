@@ -1,3 +1,5 @@
+import { type MediaType } from "../types/media.types";
+
 export const MEDIA_EMOJI: Record<string, string> = {
     movie: '🎬',
     book:  '📖',
@@ -30,3 +32,13 @@ export const MEDIA_DOT_COLOR: Record<string, string> = {
     book:  '#4CAF50',
     show:  '#FF9800',
 };
+
+// Media type option: 'all' clears the filter
+export const MEDIA_TYPES = [
+    { label: 'All',    value: '' },
+    { label: '🎬 Movie', value: 'movie' },
+    { label: '📺 Show',  value: 'show' },
+    { label: '📖 Book',  value: 'book' },
+];
+
+export const MEDIA_TYPE_OPTIONS: MediaType[] = ['movie', 'show', 'book'];

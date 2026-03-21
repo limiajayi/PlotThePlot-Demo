@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { NewRating, Ratings } from "../../types/ratings.types";
-import type { Media } from "../../types/media.types";
-import { getQuadrant, MEDIA_DOT_COLOR } from "../../utils/helpers";
+import type { ExternalMediaResult, MediaType } from "../../types/media.types";
+import { getQuadrant, MEDIA_DOT_COLOR, MEDIA_TYPE_OPTIONS } from "../../utils/helpers";
 import styles from "../../styles/RatingsForm.module.css";
 
 type RatingsFormProps = {
@@ -14,8 +14,20 @@ type RatingsFormProps = {
 const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: RatingsFormProps) => {
 
     const [searchQuery, setSearchQuery] = useState(''); // passed to useParams then the backend to return the media we need
-    const [searchResults, setSearchResults] = useState<Media[]>([]); 
-    const [selectedMedia, setSelectedMedia] = useState<Media | null>(editingRating?.media ?? null);
+    const [searchMediaType, setSearchMediaType] = useState<MediaType>('movie');
+
+    const [searchResults, setSearchResults] = useState<ExternalMediaResult[]>([]); 
+    const [selectedMedia, setSelectedMedia] = useState<ExternalMediaResult | null>(
+        editingRating ? {
+            tmdb_id: editingRating.media.tmdb_id,
+            isbn: editingRating.media.isbn,
+            title: editingRating.media.title,
+            media_type: editingRating.media.media_type,
+            release_year: editingRating.media.release_year,
+            cover_image_url: editingRating.media.cover_image_url,
+            creator: editingRating.media.creator
+        } : null
+    );
     const [formData, setFormData] = useState({
         good_reason: editingRating?.good_reason ?? '',
         like_reason: editingRating?.like_reason ?? '',
@@ -26,12 +38,17 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: Ratings
 
     // queries the backend to find the appropriate media results
     const handleSearch = async () => {
-        const response = await fetch(`http://localhost:3001/api/media?search=${searchQuery}`);
+        if (!searchQuery.trim()) return;
+
+        const response = await fetch(
+            `http://localhost:3001/api/media/search?query=${encodeURIComponent(searchQuery)}&media_type=${searchMediaType}`
+        );
+
         const result = await response.json();
         setSearchResults(result);
     }
 
-    const handleMediaSelect = (media: Media) => {
+    const handleMediaSelect = (media: ExternalMediaResult) => {
         setSelectedMedia(media);
         setSearchResults([]); // Clear search results after media has been found
     }
@@ -43,7 +60,7 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: Ratings
         if (!selectedMedia) return;
 
         const newRating: NewRating = {
-            media_id: selectedMedia.id,
+            media: selectedMedia,
             x_coordinate: coordinates?.x,
             y_coordinate: coordinates?.y,
             good_reason: formData.good_reason,
@@ -106,6 +123,26 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: Ratings
                     
                     <label className={styles.label}>Search for title</label>
 
+                    
+                    <div className={styles.searchRow}>
+                        {/* media type chips */}
+                        <div className={styles.chipRow}>
+                            {/* destructuring label and value */}
+                            {MEDIA_TYPE_OPTIONS.map(type => (
+                                <button
+                                    key={type}
+                                    className={`${styles.chip} ${searchMediaType === type ? styles.chipActive : ''}`}
+                                    onClick={() => {
+                                        setSearchMediaType(type)
+                                        setSearchResults([]) // clear stale results when switching type
+                                    }}
+                                >
+                                    {type}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
                     <div className={styles.searchRow}>
                         <input 
                             className={styles.input}
@@ -129,10 +166,10 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: Ratings
                     {/* Search results dropdown */}
                     {searchResults?.length > 0 && (
                         <div className={styles.searchResults}>
-                            {searchResults.map(media => (
+                            {searchResults.map((media, index) => (
                                 <div 
                                     className={styles.searchRedultItem}
-                                    key={media.id} 
+                                    key={media.tmdb_id ?? media.isbn ?? index} 
                                     onClick={() => handleMediaSelect(media)}
                                     style={{ padding: '8px', cursor: 'pointer', border: '1px solid #eee', borderRadius: '8px' }}
                                 >
@@ -141,10 +178,11 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: Ratings
                                         className={styles.mediaTypeDot}
                                         style={{ background: MEDIA_DOT_COLOR[media.media_type] ?? '#888' }}
                                     />
+                                    
 
                                     <div>
                                         <p className={styles.mediaTitle}>{media.title}</p>
-                                        <p className={styles.mediaMeta}>{styles.media_type}</p>
+                                        <p className={styles.mediaMeta}>{media.media_type}</p>
                                     </div>
                                 </div>
                             ))}

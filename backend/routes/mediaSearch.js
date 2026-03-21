@@ -38,6 +38,7 @@ router.get('/', async (request, response) => {
             const results = data.results.map(item => ({
                 tmdb_id: item.id,
                 title: item.title ?? item.name,
+                media_type: media_type === 'movie' ? 'movie' : 'show',
                 release_year: parseInt(
                     (item.release_date ?? item.first_air_date ?? '0').split('-')[0]
                 ),
