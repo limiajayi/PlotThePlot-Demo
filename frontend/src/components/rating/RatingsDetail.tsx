@@ -21,6 +21,18 @@ const RatingsDetail = ({ ratings, onEdit, onDelete }: RatingsDetailProps) => {
     return (
         <div>
 
+            {/* cover image banner - only renders if the media has a cover image url */}
+            {ratings.media.cover_image_url && (
+                <div className={styles.banner}>
+                    <img 
+                        className={styles.bannerImg}
+                        src={ratings.media.cover_image_url} 
+                        alt={ratings.media.title}
+                    />
+                    <div className={styles.bannerFade} />
+                </div>
+            )}
+
 
             {/* Header: title, media type, coordinates */}
             <div className={styles.header}>

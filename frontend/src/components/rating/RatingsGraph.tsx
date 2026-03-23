@@ -144,17 +144,18 @@ const RatingsGraph = ({ user, ratings }: RatingsGraphProps) => {
 
                             {selectedRatings && (
                             <div>
+                                
+                                <RatingsDetail 
+                                    ratings={selectedRatings}
+                                    onDelete={handleDelete}
+                                    onEdit={handleEdit}
+                                />
                                 <button onClick={() => {
                                     setSelectedRatings(null);
                                     setIsModalOpen(false);
                                 }}>
                                     Close
                                 </button>
-                                <RatingsDetail 
-                                    ratings={selectedRatings}
-                                    onDelete={handleDelete}
-                                    onEdit={handleEdit}
-                                />
                             </div>
                             )}
 

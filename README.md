@@ -226,7 +226,7 @@ The coordinate system provides vocabulary for these complex experiences while cr
 
 ## 📄 License
 
-GNU General Public License. All rights reserved while in development.
+All Rights Reserved.
 
 ## 👤 Author
 
