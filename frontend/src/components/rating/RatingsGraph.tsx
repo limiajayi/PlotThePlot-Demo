@@ -1,5 +1,4 @@
 import { ErrorBoundary } from "react-error-boundary";
-// import useRatings from "../../hooks/useRatings";
 import ScatterPlot from "./ScatterPlot";
 import { useState } from "react";
 import Modal from "react-modal";
@@ -7,6 +6,7 @@ import RatingsForm from "./RatingsForm";
 import type { NewRating, Ratings } from "../../types/ratings.types";
 import RatingsDetail from "./RatingsDetail";
 import type { User } from "../../types/user.types";
+import useApi from "../../hooks/useApi";
 
 type RatingsGraphProps = {
     user: User;
@@ -19,6 +19,7 @@ const RatingsGraph = ({ user, ratings }: RatingsGraphProps) => {
     const [selectedCoordinates, setSelectedCoordinates] = useState<{ x: number, y: number }>({ x: 0, y: 0 }); // passed from scatter plot
     const [selectedRatings, setSelectedRatings] = useState<Ratings | null>(null);
     const [editingRating, setEditingRating] = useState<Ratings | null>(null);
+    const api = useApi();
 
     // sets coordinates from the ScatterPlot component
     const handleCoordinateClick = (x: number, y: number ) => {
@@ -30,42 +31,33 @@ const RatingsGraph = ({ user, ratings }: RatingsGraphProps) => {
     const handleModalClose = () => {
         setIsModalOpen(false);
         setSelectedCoordinates({ x: 0, y: 0 });
+        setSelectedRatings(null);
         setEditingRating(null);
     };
 
     // when creating a new rating
     // or editing an existing rating
+
     const handleRatingSubmit = async (rating: NewRating) => {
         try {
-            // if the user is editing we're changing it with a rating id
-            // else we're letting the server decide the id
-            const url = editingRating 
-                        ? `http://localhost:3001/api/users/${user.id}/ratings/${editingRating.id}` 
-                        : `http://localhost:3001/api/users/${user.id}/ratings`;
-            
-            // if editing the method is PUT
-            // else the method is POST
-            const method = editingRating ? 'PUT' : 'POST';
 
-            const response = await fetch(url, {
-                method: method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    ...rating,
-                })
-            });
+            if (editingRating) {
+                await api.ratings.updateRating(user.id, editingRating.id, {
+                    good_reason: rating.good_reason,
+                    like_reason: rating.like_reason,
+                    context: rating.context
+                });
+            } else {
+                await api.ratings.createRating(user.id, rating);
+            }
 
-            if (!response.ok) throw new Error(`Failed to ${editingRating ? 'update' : 'create'} rating.`);
-
-            //Close the modal we're done!
             setIsModalOpen(false);
             setEditingRating(null);
-            setSelectedCoordinates({ x: 0, y: 0 }); // default for selected coordinates
-
-            window.location.reload()
+            setSelectedCoordinates({ x: 0, y: 0 });
+            window.location.reload();
 
         } catch (error) {
-            console.error('Error rating: ', error);
+            console.error('Error creating rating:', error);
             alert(`Failed to ${editingRating ? 'update' : 'create'} rating`);
         }
     };
@@ -75,25 +67,17 @@ const RatingsGraph = ({ user, ratings }: RatingsGraphProps) => {
         if (!selectedRatings) return;
 
         try {
-            const response = await fetch(
-                `http://localhost:3001/api/users/${user.id}/ratings/${selectedRatings.id}`,
-                { method: 'DELETE' }
-            );
-
-            if (!response.ok) throw new Error('Failed to delete rating.');
-
-            // close ratings detail
+            
+            await api.ratings.deleteRating(user.id, selectedRatings.id);
             setSelectedRatings(null);
-
-            //refresh the page
-            //for now
             window.location.reload();
 
         } catch (error) {
-            console.error('Error deleting: ', error);
-            alert('Failed to delete rating');
+            console.error('Error deleting rating: ', error);
+            alert(`Failed to delete rating`);
         }
-    };
+
+    }
 
     // for when the user wants to edit a rating
     // use rating form & rating detail

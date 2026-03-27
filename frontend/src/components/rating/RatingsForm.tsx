@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { NewRating, Ratings } from "../../types/ratings.types";
 import type { ExternalMediaResult, MediaType } from "../../types/media.types";
 import { getQuadrant, MEDIA_DOT_COLOR, MEDIA_TYPE_OPTIONS } from "../../utils/helpers";
+import useApi from "../../hooks/useApi";
 import styles from "../../styles/RatingsForm.module.css";
 
 type RatingsFormProps = {
@@ -33,6 +34,7 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: Ratings
         like_reason: editingRating?.like_reason ?? '',
         context: editingRating?.context ?? ''
     });
+    const api = useApi();
 
     const quadrant = getQuadrant(coordinates.x, coordinates.y);
 
@@ -40,11 +42,8 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: Ratings
     const handleSearch = async () => {
         if (!searchQuery.trim()) return;
 
-        const response = await fetch(
-            `http://localhost:3001/api/media/search?query=${encodeURIComponent(searchQuery)}&media_type=${searchMediaType}`
-        );
+        const result = await api.mediaSearch.search(searchQuery, searchMediaType);
 
-        const result = await response.json();
         setSearchResults(result);
     }
 

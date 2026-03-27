@@ -31,5 +31,5 @@ app.use('/api/', ratingsRouter);
 
 const PORT = 3001
 app.listen(PORT, () => {
-    console.log(`Backend Server running on port ${PORT}.`)
+    console.log(`PlotThePlot backend server running on port ${PORT}.`)
 })
