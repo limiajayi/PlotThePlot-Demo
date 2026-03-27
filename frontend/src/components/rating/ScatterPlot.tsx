@@ -263,7 +263,7 @@ const ScatterPlot = ({ data, onCoordinateClick, onDotHover }: ScatterPlotProps) 
                     style={{ left: tooltip.x, top: tooltip.y }}
                 >
                     <span className={styles.tooltipTitle}>
-                        {tooltip.rating.media.title}
+                        {tooltip.rating.media.title} ({tooltip.rating.media.release_year})
                     </span>
                     <span className={styles.tooltipCoords}>
                         ({tooltip.rating.x_coordinate}, {tooltip.rating.y_coordinate})

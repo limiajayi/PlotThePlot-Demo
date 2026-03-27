@@ -116,6 +116,15 @@ router.post('/users/:id/ratings', async (request, response) => {
     // assign mediaId to the id of the existing media
     if (existingMedia) {
         mediaId = existingMedia.id
+
+        // update with latest data from the external API
+        // cover cases where the row was created with bad / incomplete data
+
+        await supabase
+        .from('media')
+        .update({ title, cover_image_url, creator, release_year })
+        .eq('id', mediaId);
+
     } else {
         const { data: newMedia, error: mediaError } = await supabase
             .from('media')
