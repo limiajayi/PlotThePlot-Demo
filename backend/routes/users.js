@@ -1,6 +1,7 @@
-const { supabase } = require('../lib/supabase')
-const express = require('express')
-const router = express.Router()
+const { supabase } = require('../lib/supabase');
+const { requireAuth } = require('../middleware/auth');
+const express = require('express');
+const router = express.Router();
 
 //USERS
 

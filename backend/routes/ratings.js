@@ -2,7 +2,7 @@ const { supabase } = require('../lib/supabase')
 const express = require('express')
 const router = express.Router()
 let ratings = require('../data/ratings')
-let media = require('../data/media')
+const { requireAuth } = require('../middleware/auth')
 
 const generateId = (userId) => {
     const userRatings = ratings.filter(rating => rating.id === userId)

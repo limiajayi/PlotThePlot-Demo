@@ -11,10 +11,11 @@ const cors = require('cors')
 //middleware for me to see what each request looks like
 //when testing with Postman
 const requestLogger = (request, response, next) => {
-    console.log('Method:', request.method)
-    console.log('Path:  ', request.path)
-    console.log('Body:  ', request.body)
-    console.log('---')
+    console.log('Method:', request.method);
+    console.log('Path:  ', request.path);
+    console.log('Header: ', request.headers);
+    console.log('Body:  ', request.body);
+    console.log('---');
     next()
 }
 

@@ -6,8 +6,6 @@ A media rating platform that captures the complexity of how we actually experien
 
 ![The same two dimensional scatter plot showing more movies and books on an X-Y coordinate grid.](/assets/PTP-2.png)
 
-![PlotThePlot render of the 2D graph with my own ratings](/assets/PTP-4.png)
-
 ## 🌟 What is PlotThePlot?
 
 Traditional rating systems force us to collapse complex feelings into oversimplified metrics (⭐⭐⭐⭐). PlotThePlot uses a **two-dimensional coordinate system** that separates "quality" from "personal enjoyment":
@@ -16,25 +14,25 @@ Traditional rating systems force us to collapse complex feelings into oversimpli
 - **Y-axis**: Didn't Like It (-1) ←→ Liked It (+1)
 
 This creates four quadrants:
-- **Amazing Media** (good + liked): Masterpieces you genuinely love.
-- **Guilty Pleasure** (bad + liked): Objectively flawed in every way but you enjoy them anyway.
-- **Good, But Not For Me** (good + didn't like): Technically excellent but didn't connect.
-- **Don't Touch** (bad + didn't like): Neither well-made nor enjoyable.
 
-![An illustration of the PlotThePlot rating system divided into four quadrants. The horizontal axis ranges from Bad on the left to Good on the right. The vertical axis ranges from Didn't Like It at the bottom to Liked It at the top. The four quadrants are labeled: Amazing Media in the upper right (good and liked), Guilty Pleasure in the upper left (bad but liked), Good But Not For Me in the lower right (good but didn't like), and Don't Touch in the lower left (bad and didn't like). Each quadrant is color-coded and includes representative media examples. The overall tone is informative and encouraging, presenting the coordinate system as a nuanced alternative to traditional star ratings.](/assets/PTP-3.png)
+- **Over** (good + liked): Masterpieces you genuinely love.
+- **Overhated** (bad + liked): Objectively flawed in every way but you enjoy them anyway.
+- **Overhated** (good + didn't like): Technically excellent but didn't connect.
+- **Under** (bad + didn't like): Neither well-made nor enjoyable.
 
+![PlotThePlot render of the 2D graph with my own ratings](/assets/PTP-4.png)
 
 ## ✨ Key Features
 
 ### Currently Developing (Phase 1)
-- 📍 **Interactive Coordinate Rating System**: Click to place your rating on the 2D graph
-- 📊 **Beautiful D3.js Visualizations**: See your entire media consumption mapped visually
-- 🎯 **Context Capture**: Record why you rated something and what circumstances influenced your experience
+
+- 🚺**User Settings**: Changing the user's username, password and deleting their account
 - 🔄 **Multiple View Modes**: Toggle between scatter plot and grid views
 - ♿ **Accessible Design**: Simple slider mode for users who prefer not to use coordinate clicking
 - 📱 **Responsive Design**: Optimized for desktop with mobile support
 
 ### Coming Soon (Phase 2)
+
 - 👥 Social features and friend comparisons
 - 📈 Aggregate coordinates showing community consensus
 - 🔍 Media search and discovery
@@ -44,8 +42,9 @@ This creates four quadrants:
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js (v22 or higher)
-- npm or yarn
+- npm
 
 ### Installation
 
@@ -74,17 +73,20 @@ npm run dev
 ## 🏗️ Tech Stack
 
 ### Frontend
+
 - **React 18** with TypeScript
 - **D3.js** for interactive data visualizations
 - **React Router** for navigation
 - **CSS Modules** for styling (considering Tailwind)
 
-### Backend (Planned - Production)
+### Backend
+
 - **Node.js** with Express.js
 - **PostgreSQL** for data persistence
 - **Supabase** or similar for authentication and real-time features
 
 ### Development Tools
+
 - **TypeScript** for type safety
 - **Vite** for fast development and building
 - **ESLint & Prettier** for code quality
@@ -92,7 +94,7 @@ npm run dev
 
 ## 📁 Project Structure
 
-```
+```text
 PlotThePlot-Demo/
 ├── backend/
 │   ├── index.js           # Defines current API endpoints
@@ -107,6 +109,7 @@ PlotThePlot-Demo/
 │   │   └── ...
 │   └── ...
 ```
+
 ## 🎨 Design Philosophy
 
 PlotThePlot is built on several core principles:
@@ -128,6 +131,7 @@ Progress is tracked using Notion workspace and documented in regular sprint retr
 This is currently a personal learning project, but feedback and suggestions are welcome! 
 
 ### Potential Contribution Areas
+
 - UI/UX improvements
 - Accessibility enhancements  
 - Performance optimizations
@@ -146,11 +150,13 @@ GET  http://localhost:3001/api/users
 ```
 
 **Get a specific user**
+
 ```
 GET  http://localhost:3001/api/users/:id
 ```
 
 **Modify a user**
+
 ```
 PUT http://localhost:3001/api/users/:id
 
