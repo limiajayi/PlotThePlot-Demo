@@ -100,8 +100,12 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setSession(null);
     }
 
+    const updateUser = (updates: Partial<User>) => {
+        setUser( prev => prev ? {...prev, ...updates} : null);
+    }
+
     return (
-        <AuthContext.Provider value={{ user, session, loading, login, signup, logout }}>
+        <AuthContext.Provider value={{ user, session, loading, login, signup, logout, updateUser }}>
             {children}
         </AuthContext.Provider>
     );
