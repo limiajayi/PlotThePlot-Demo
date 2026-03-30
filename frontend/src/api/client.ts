@@ -15,6 +15,11 @@ export const createApiClient = (token: string | undefined) => {
         });
 
         if (!response.ok) throw new Error (`API error: ${response.status}`);
+
+        if (response.status === 204 || response.headers.get('content-length') === '0') {
+            return null;
+        }
+
         return response.json();
     }
 

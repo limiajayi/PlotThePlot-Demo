@@ -174,7 +174,7 @@ router.post('/users/:id/ratings', async (request, response) => {
 })
 
 // API endpoint to modify a rating by user
-router.put('/users/:userId/ratings/:ratingId', async (request, response) => {
+router.put('/users/:userId/ratings/:ratingId', requireAuth, async (request, response) => {
     const {userId, ratingId} = request.params
     const body = request.body
 
@@ -200,13 +200,14 @@ router.put('/users/:userId/ratings/:ratingId', async (request, response) => {
 router.delete('/users/:userId/ratings/:ratingId', async (request, response) => {
     const { userId, ratingId } = request.params
 
-    const { error } = await supabase
+    const { data, error } = await supabase
         .from('ratings')
         .delete()
         .eq('id', ratingId)
         .eq('user_id', userId)
+        .select('*');
     
-    if (error) {
+    if (error && !data) {
         console.log(`Error deleting this rating ${error.message}`);
         return response.status(500).json({ error: `Error deleting rating: ${error.message}` })
     }

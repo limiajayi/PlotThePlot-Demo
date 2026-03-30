@@ -183,6 +183,7 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: Ratings
                                         <p className={styles.mediaTitle}>{media.title}</p>
                                         <p className={styles.mediaMeta}>{media.media_type}</p>
                                     </div>
+                                    
                                 </div>
                             ))}
                         </div>
