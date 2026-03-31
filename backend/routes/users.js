@@ -44,18 +44,24 @@ router.get('/:id', async (request, response) => {
 
 
 //API endpoint to delete a user
-router.delete('/:id', async (request, response) => {
+router.delete('/:id', requireAuth, async (request, response) => {
     
-    const id = request.params.id
+    if (request.userId !== request.params.id) {
+        console.log('Not allowed to take this action.');
+        return response.status(403).json({ error: 'Forbidden' });
+    }
+
+    const id = request.params.id;
+
     const { error } = await supabase
-    .from('users')
-    .delete()
-    .eq('id', id)
+    .auth
+    .admin
+    .deleteUser(id);
 
     if (error) {
-        console.log("Error deleting user: ", error)
+        console.log('Error deleting user: ', error);
         return response.status(500).json({
-            error: "Cannot delete user"
+            error: 'Failed to delete account'
         })
     }
 

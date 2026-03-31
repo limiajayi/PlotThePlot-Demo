@@ -3,6 +3,7 @@ import { useAuth } from "../context/useAuth";
 import { createApiClient } from "../api/client";
 import { createRatingsService } from "../api/ratings";
 import { createMediaSearchService } from "../api/mediaSearch";
+import { createUsersService } from "../api/users";
 
 const useApi = () => {
     const { session } = useAuth();
@@ -14,7 +15,8 @@ const useApi = () => {
         const { apiFetch } = createApiClient(session?.access_token);
         return {
             ratings: createRatingsService(apiFetch),
-            mediaSearch: createMediaSearchService(apiFetch)
+            mediaSearch: createMediaSearchService(apiFetch),
+            users: createUsersService(apiFetch),
         }
     }, [session?.access_token]);
 
