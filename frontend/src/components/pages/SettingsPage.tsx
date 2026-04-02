@@ -90,6 +90,47 @@ const SettingsPage = () => {
 
     }
 
+    // --- password ---
+
+    const isValidPassword = (password: string) => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/.test(password);
+
+    const handlePasswordConfirmOpen = () => {
+        setPasswordState(defaultSectionState);
+
+        if (!isValidPassword(newPassword)) {
+            setPasswordState(prev => ({
+                ...prev,
+                error: 'Password must be at least 8 characters and include an uppercase letter, lowercase letter, number and special character.'
+            }));
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            setPasswordState(prev => ({ ...prev, error: 'Passwords do not match.' }));
+            return;
+        }
+
+        setShowPasswordConfirm(true);
+    }
+
+    // --- email ---
+    const handleEmailConfirmOpen = () => {
+        setEmailState(defaultSectionState);
+
+        if (!newEmail.trim()) {
+            setEmailState(prev => ({...prev, error: 'Please enter a new email address.'}));
+            return;
+        }
+
+        if (newEmail === user.email) {
+            setEmailState(prev => ({ ...prev, error: 'This is already your email address.' }));
+            return;
+        }
+
+        setShowEmailConfirm(true);
+
+    }
+
     return (
         <div>
             <div>
@@ -131,6 +172,66 @@ const SettingsPage = () => {
 
             {/* ---- password section ---- */}
             <section>
+                <h2>Change Password</h2>
+
+                <input 
+                    type="password"
+                    value={newPassword}
+                    onChange={({ target }) => {
+                        setNewPassword(target.value);
+                        setPasswordState(defaultSectionState);
+                    }}
+                    placeholder="New password"
+                    minLength={8}
+                />
+
+                <input 
+                    type="password"
+                    value={confirmPassword}
+                    onChange={({ target }) => {
+                        setConfirmPassword(target.value);
+                        setPasswordState(defaultSectionState);
+                    }}
+                    placeholder="Confirm new password"
+                    minLength={8}
+                />
+
+                {passwordState.error && <p>{passwordState.error}</p>}
+                {passwordState.success && <p>Password updated successfully.</p>}
+
+                <button
+                    onClick={handlePasswordConfirmOpen}
+                    disabled={!newPassword.trim() || !confirmPassword.trim() || passwordState.loading}
+                >
+                    Change Password
+                </button>
+
+            </section>
+
+            {/* --- email section --- */}
+            <section>
+                <h2>Change Email</h2>
+                <p>Current email: {user.email}</p>
+
+                <input 
+                    type="email" 
+                    value={newEmail}
+                    onChange={({ target }) => {
+                        setNewEmail(target.value);
+                        setEmailState(defaultSectionState);
+                    }}
+                    placeholder="New email address"
+                />
+
+                {emailState.error && <p>{emailState.error}</p>}
+                {emailState.success && <p>Confirmation email sent to {newEmail}. Please check your inbox.</p>}
+
+                <button
+                    onClick={handleEmailConfirmOpen}
+                    disabled={!newEmail.trim()}
+                >
+                    Change Email
+                </button>
 
             </section>
 

@@ -72,13 +72,7 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: Ratings
 
 
     return (
-        <form onSubmit={handleSubmit}>
-            {editingRating && (
-                <p>
-                    Note: To change coordinates, delete this rating and create a new one.
-                </p>
-            )}
-            
+        <form onSubmit={handleSubmit}>            
             
             {/* header */}
             <div className={styles.header}>
@@ -149,8 +143,7 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: Ratings
                             value={searchQuery}
                             onChange={({ target }) => setSearchQuery(target.value)}
                             placeholder="e.g. The Godfather..."
-                            
-                            
+                            autoFocus
                         />
 
                         <button 
@@ -204,6 +197,7 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: Ratings
                         <span className={styles.mediaMeta}> · {selectedMedia.media_type}</span>
                     </span>
                     
+                    {!editingRating && (
                     <button 
                         className={`${styles.btnGhost} ${styles.btnSecondary}`}
                         type="button" 
@@ -211,8 +205,12 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: Ratings
                     >
                         Change
                     </button>
+                    )}
                 </div>
             )}
+
+            
+            
 
             {/* Only show reason fields if media is selected */}
             {selectedMedia && (
