@@ -6,11 +6,12 @@ import LoginPage from "./components/pages/LoginPage";
 import SignUpPage from "./components/pages/SignUpPage";
 import ProtectedRoute from "./components/pages/ProtectedRoute";
 import SettingsPage from "./components/pages/SettingsPage";
+import styles from "./styles/App.module.css"
 
 const PublicOnlyRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div className={styles.stateMsg}>Loading...</div>;
   if (user) return <Navigate to={`/users/${user.username}/profile`} replace />;
   return <>{children}</>;
 }

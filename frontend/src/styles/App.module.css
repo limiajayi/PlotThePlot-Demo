@@ -1,0 +1,7 @@
+/* loading / error */
+.stateMsg {
+    padding: 48px;
+    font-size: 14px;
+    color: var(--text-3, #9b9791);
+    font-family: 'DM Mono', monospace;
+}

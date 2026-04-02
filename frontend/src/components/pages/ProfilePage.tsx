@@ -1,7 +1,7 @@
 import RatingsList from '../rating/RatingsList';
 import RatingSearch from '../rating/RatingsSearch';
 import RatingsGraph from '../rating/RatingsGraph';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import useUser from '../../hooks/useUser';
 import styles from '../../styles/ProfilePage.module.css';
@@ -11,6 +11,7 @@ import { getQuadrant } from '../../utils/helpers';
 
 const ProfilePage = () => {
     const { username } = useParams<{ username: string }>();
+    const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const { user, loading, error } = useUser(username);
     const [grid, setGrid] = useState(false); // toggle between the grid view and graph view of ratings
@@ -55,7 +56,12 @@ const ProfilePage = () => {
                 </div>
 
                 <div className={styles.headerSpacer}  />
-                <div className={styles.avatar} >{avatarLetter}</div>
+                <div 
+                    className={styles.avatar}
+                    onClick={() => {navigate(`/users/${user.username}/settings`)}}
+                >
+                    {avatarLetter}
+                </div>
             </header>
 
             <div className={styles.body}>

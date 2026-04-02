@@ -76,6 +76,10 @@
     font-weight: 500;
 }
 
+.avatar:hover {
+    cursor: pointer;
+}
+
 /* body (sidebar + content) */
 .body {
     flex: 1;

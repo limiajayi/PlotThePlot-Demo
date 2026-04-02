@@ -27,12 +27,11 @@ const useUser = (username: string | undefined) => {
 
                 setUser(data as User);
                 setError(null);
+                setLoading(false);
 
             } catch (error) {
                 setError('Failed to load user.');
                 console.error(error);
-            } finally {
-                setLoading(false);
             }
         }
 
