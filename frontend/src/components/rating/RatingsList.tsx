@@ -3,9 +3,10 @@ import { useState } from 'react';
 import type { Ratings } from '../../types/ratings.types';
 import Modal from 'react-modal';
 import RatingsDetail from './RatingsDetail';
+import RatingsForm from "./RatingsForm";
 import { MEDIA_EMOJI, getQuadrant, QUADRANT_COLOR } from "../../utils/helpers";
-import useApi from "../../hooks/useApi";
 import type { User } from "../../types/user.types";
+import useRatingEdit from "../../hooks/useRatingEdit";
 
 type RatingsListProps = {
     user: User;
@@ -15,41 +16,9 @@ type RatingsListProps = {
 const RatingsList = ({ user, ratings }: RatingsListProps) => {
 
     const [selectedRating, setSelectedRating] = useState<Ratings | null>(null);
-    const api = useApi();
+    const { editingRating, selectedCoordinates, isModalOpen, setIsModalOpen, isSubmitting, handleEdit, handleRatingSubmit, handleModalClose, handleDelete } = useRatingEdit(user, selectedRating, setSelectedRating);
 
     if (ratings.length === 0) return <div className={styles.empty}>No ratings yet.</div>;
-
-    // for when a user edits a rating
-    const handleRatingEdit = async (rating: Ratings) => {
-        try {
-            
-            await api.ratings.updateRating(user.id, rating.id, {
-                good_reason: rating.good_reason,
-                like_reason: rating.like_reason,
-                context: rating.context
-            })
-
-        } catch (error) {
-            console.log('Error editing rating: ', error);
-            alert('Failed to edit rating');
-        }
-    }
-
-    // for when the user deletes a rating
-    const handleDelete = async () => {
-        if (!selectedRating) return;
-
-        try {
-            
-            await api.ratings.deleteRating(user.id, selectedRating.id);
-            setSelectedRating(null);
-            window.location.reload();
-
-        } catch (error) {
-            console.log('Error deleting rating: ', error);
-            alert(`Failed to delete rating`);
-        }
-    }
 
     
     return (
@@ -64,7 +33,10 @@ const RatingsList = ({ user, ratings }: RatingsListProps) => {
                     <div
                         key={rating.id}
                         className={styles.card}
-                        onClick={() => setSelectedRating(rating)}
+                        onClick={() => {
+                            setSelectedRating(rating);
+                            setIsModalOpen(true);
+                        }}
                     >
                         <div 
                             className={styles.colorStrip}
@@ -93,8 +65,11 @@ const RatingsList = ({ user, ratings }: RatingsListProps) => {
         </div>
 
             <Modal
-                isOpen={!!selectedRating}
-                onRequestClose={() => setSelectedRating(null)}
+                isOpen={isModalOpen}
+                onRequestClose={() => {
+                    setSelectedRating(null);
+                    setIsModalOpen(false);
+                }}
                 contentLabel="Rating Detail"
                 appElement={document.getElementById('root') as HTMLElement}
                 style={{
@@ -106,19 +81,26 @@ const RatingsList = ({ user, ratings }: RatingsListProps) => {
                     }
                 }}
             >
-
+                
                     {selectedRating && (
                         <div>
-                            <button onClick={() => setSelectedRating(null)}>Close</button>
                             <RatingsDetail
                                 ratings={selectedRating}
-                                onEdit={() => {
-                                    // TODO: wire up edit flow same as RatingsGraph
-                                    setSelectedRating(null);
-                                }}
+                                onEdit={handleEdit}
                                 onDelete={handleDelete}
+                                onClose={handleModalClose}
                             />
                         </div>)}
+
+                    {!selectedRating && (
+                                <RatingsForm 
+                                    coordinates={selectedCoordinates}
+                                    onSubmit={handleRatingSubmit}
+                                    onCancel={handleModalClose}
+                                    editingRating={editingRating}
+                                    isSubmitting={isSubmitting}
+                                />
+                            )}
 
             </Modal>
         </>

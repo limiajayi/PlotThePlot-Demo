@@ -137,13 +137,8 @@ const RatingsGraph = ({ user, ratings }: RatingsGraphProps) => {
                                     ratings={selectedRatings}
                                     onDelete={handleDelete}
                                     onEdit={handleEdit}
+                                    onClose={handleModalClose}
                                 />
-                                <button onClick={() => {
-                                    setSelectedRatings(null);
-                                    setIsModalOpen(false);
-                                }}>
-                                    Close
-                                </button>
                             </div>
                             )}
 

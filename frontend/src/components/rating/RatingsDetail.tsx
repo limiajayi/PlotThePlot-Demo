@@ -7,9 +7,10 @@ type RatingsDetailProps = {
     ratings: Ratings | null;
     onEdit?: () => void;
     onDelete?: () => void;
+    onClose?: () => void;
 };
 
-const RatingsDetail = ({ ratings, onEdit, onDelete }: RatingsDetailProps) => {
+const RatingsDetail = ({ ratings, onEdit, onDelete, onClose }: RatingsDetailProps) => {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
     if (!ratings) return <div>Error loading rating details</div>;
@@ -88,6 +89,10 @@ const RatingsDetail = ({ ratings, onEdit, onDelete }: RatingsDetailProps) => {
 
                 <button className={styles.btnPrimary} onClick={onEdit}>
                     Edit Rating
+                </button>
+
+                <button className={styles.btnPrimary} onClick={onClose}>
+                    Close
                 </button>
 
                 <div className={styles.footerRight}>
