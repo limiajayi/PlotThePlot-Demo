@@ -7,6 +7,7 @@ import type { NewRating, Ratings } from "../../types/ratings.types";
 import RatingsDetail from "./RatingsDetail";
 import type { User } from "../../types/user.types";
 import useApi from "../../hooks/useApi";
+import styles from "../../styles/RatingsList.module.css"
 
 type RatingsGraphProps = {
     user: User;
@@ -98,16 +99,14 @@ const RatingsGraph = ({ user, ratings }: RatingsGraphProps) => {
 
     return (
             <div>
-                
                     {ratings.length === 0 && (
-                        <div>
+                        <div className={styles.empty}>
                             No ratings yet. Click the graph below to add a rating
                         </div>
                     )}
-                    
 
                     <ErrorBoundary FallbackComponent={() => <div>Error Detected</div>}>
-                        <div style={{ display: 'flex', width: '95%', alignContent: 'center', justifyContent: 'center', padding: '24px' }}>
+                        <div style={{ display: 'flex' }}>
                             <ScatterPlot 
                                 data={ratings} 
                                 onCoordinateClick={handleCoordinateClick}
