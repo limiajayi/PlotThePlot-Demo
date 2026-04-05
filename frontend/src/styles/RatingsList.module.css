@@ -1,7 +1,8 @@
 .grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(200px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
+    column-gap: 14px;
+    row-gap: 14px;
     padding: 24px;
     background: var(--bg, #f5f3ee);
 }
@@ -11,12 +12,11 @@
     background: var(--surface, #fff);
     border: 1px solid var(--border, #d8d4cc);
     border-radius: 10px;
-    padding: 16px;
+    padding: 15px;
     cursor: pointer;
     position: relative;
     overflow: hidden;
     transition: box-shadow 0.15s, transform 0.15s;
-    height: 20vh;
 }
 
 .card:hover {
@@ -30,7 +30,7 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 5px;
+    height: 10px;
 }
 
 /* media type badge */

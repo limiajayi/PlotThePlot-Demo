@@ -10,9 +10,10 @@ type RatingsFormProps = {
     onSubmit: (rating: NewRating) => void;
     onCancel: () => void;
     editingRating?: Ratings | null;
+    isSubmitting?: boolean;
 };
 
-const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: RatingsFormProps) => {
+const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating, isSubmitting = false }: RatingsFormProps) => {
 
     const [searchQuery, setSearchQuery] = useState(''); // passed to useParams then the backend to return the media we need
     const [searchMediaType, setSearchMediaType] = useState<MediaType>('movie');
@@ -275,8 +276,15 @@ const RatingsForm = ({ coordinates, onSubmit, onCancel, editingRating }: Ratings
                     </button>
 
                     {selectedMedia && (
-                        <button className={styles.btnPrimary} type="submit">
-                            Submit Rating →
+                        <button 
+                            className={styles.btnPrimary} 
+                            type="submit"
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting
+                                ? editingRating ? 'Updating...' : 'Adding...'
+                                : editingRating ? 'Update Rating →' : 'Submit Rating →'
+                            }
                         </button>
                     )}
             </div>

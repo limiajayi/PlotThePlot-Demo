@@ -19,6 +19,7 @@ const RatingsGraph = ({ user, ratings }: RatingsGraphProps) => {
     const [selectedCoordinates, setSelectedCoordinates] = useState<{ x: number, y: number }>({ x: 0, y: 0 }); // passed from scatter plot
     const [selectedRatings, setSelectedRatings] = useState<Ratings | null>(null);
     const [editingRating, setEditingRating] = useState<Ratings | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const api = useApi();
 
     // sets coordinates from the ScatterPlot component
@@ -40,6 +41,7 @@ const RatingsGraph = ({ user, ratings }: RatingsGraphProps) => {
 
     const handleRatingSubmit = async (rating: NewRating) => {
         try {
+            setIsSubmitting(true);
 
             if (editingRating) {
                 await api.ratings.updateRating(user.id, editingRating.id, {
@@ -59,6 +61,8 @@ const RatingsGraph = ({ user, ratings }: RatingsGraphProps) => {
         } catch (error) {
             console.error('Error creating rating:', error);
             alert(`Failed to ${editingRating ? 'update' : 'create'} rating`);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -149,6 +153,7 @@ const RatingsGraph = ({ user, ratings }: RatingsGraphProps) => {
                                     onSubmit={handleRatingSubmit}
                                     onCancel={handleModalClose}
                                     editingRating={editingRating}
+                                    isSubmitting={isSubmitting}
                                 />
                             )}
                         </Modal>

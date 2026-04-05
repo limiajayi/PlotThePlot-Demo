@@ -106,7 +106,7 @@ const ProfilePage = () => {
                 </aside>
 
                 {/* if grid then RatingsList else RatingsGraph */}
-                {grid ? <RatingsList ratings={filteredRatings} /> :
+                {grid ? <RatingsList user={user} ratings={filteredRatings} /> :
                     <RatingsGraph user={user} ratings={filteredRatings} />}
                     
                     

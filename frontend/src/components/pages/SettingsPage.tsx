@@ -79,6 +79,7 @@ const SettingsPage = () => {
         .eq('id', user.id);
 
         if (error) {
+            console.log(error);
             setUsernameState({ error: 'Failed to update username. Please try again.', success: false, loading: false });
             return;
         }
@@ -234,6 +235,73 @@ const SettingsPage = () => {
                 </button>
 
             </section>
+
+            {/* --- appearance section --- */}
+            <section>
+                <h2>Appearance</h2>
+                <p>Dark mode and accessibility settings coming soon.</p>
+            </section>
+
+            {/* --- delete account section --- */}
+                <section>
+                    <h2>Delete Account</h2>
+                    <p>This will permanently delete your account and all you ratings. This cannot be undone.</p>
+
+                    {deleteState.error && <p>{deleteState.error}</p>}
+
+                    <button
+                        onClick={() => {
+                            setDeleteState(defaultSectionState);
+                            setShowDeleteConfirm(true);
+                        }}
+                    >
+                        Delete Account
+                    </button>
+
+                </section>
+
+                {/* --- password confirm modals --- */}
+                <PasswordConfirmModal
+                    isOpen={showPasswordConfirm}
+                    onClose={() => setShowPasswordConfirm(false)}
+                    onConfirmed={async () => {
+                        const { error } = await supabase.auth.updateUser({ password: newPassword });
+                        if (error) throw new Error(error.message);
+                        setPasswordState({ error: null, success: true, loading: false });
+                        setNewPassword('');
+                        setConfirmPassword('');
+                    }}
+                />
+
+                <PasswordConfirmModal 
+                    isOpen={showEmailConfirm}
+                    onClose={() => setShowEmailConfirm(false)}
+                    onConfirmed={async () => {
+                        const { error: authError } = await supabase.auth.updateUser({ email: newEmail });
+                        if (authError) throw new Error(authError.message);
+
+                        const { error: dbError } = await supabase
+                        .from('users')
+                        .update({ email: newEmail })
+                        .eq('id', user.id);
+
+                        if (dbError) throw new Error(dbError.message);
+
+                        updateUser({ email: newEmail });
+                        setEmailState({ error: null, success: true, loading: false });
+                        setNewEmail('');
+                    }}
+                />
+
+                <PasswordConfirmModal 
+                    isOpen={showDeleteConfirm}
+                    onClose={() => setShowDeleteConfirm(false)}
+                    onConfirmed={async () => {
+                        await api.users.deleteAccount(user.id);
+                        await logout();
+                        navigate('/login', { replace: true });
+                    }}
+                />
 
         </div>
     );

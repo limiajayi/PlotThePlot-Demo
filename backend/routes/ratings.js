@@ -81,7 +81,7 @@ router.get('/users/:userId/ratings/:ratingId', async (request, response) => {
 
 
 //API endpoint to add a new rating by user
-router.post('/users/:id/ratings', async (request, response) => {
+router.post('/users/:id/ratings', requireAuth, async (request, response) => {
     const body = request.body
     const id = request.params.id
 
@@ -197,7 +197,7 @@ router.put('/users/:userId/ratings/:ratingId', requireAuth, async (request, resp
 })
 
 //API endpoint to delete a user's rating
-router.delete('/users/:userId/ratings/:ratingId', async (request, response) => {
+router.delete('/users/:userId/ratings/:ratingId', requireAuth, async (request, response) => {
     const { userId, ratingId } = request.params
 
     const { data, error } = await supabase
