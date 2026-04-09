@@ -43,7 +43,7 @@ const SettingsPage = () => {
     if (!user) return null;
 
     // --- username ---
-    const isValidUsername = (username: string) => /^[a-zA-Z0-9_-]{7,50}$/.test(username);
+    const isValidUsername = (username: string) => /^[a-zA-Z0-9_-]{7,20}$/.test(username);
 
     const handleUsernameChange = async () => {
         setUsernameState(defaultSectionState);

@@ -1,5 +1,6 @@
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
+import { isValidPassword, isValidUsername, isSusInput } from "../../utils/sanitise";
 import { useState } from "react";
 
 
@@ -15,6 +16,24 @@ const SignUpPage = () => {
         event.preventDefault();
         setError(null);
         setLoading(true);
+
+        if (!isValidUsername(formData.username)) {
+            setError('Username must be 7-20 characters...');
+            setLoading(false);
+            return;
+        }
+
+        if (!isValidPassword(formData.password)) {
+            setError('Password must be at least 8 characters...');
+            setLoading(false);
+            return;
+        }
+
+        if (isSusInput(formData.username) || isSusInput(formData.email) || isSusInput(formData.password)) {
+            setError('Invalid username, password or email.');
+            setLoading(false);
+            return;
+        }
 
         const { error } = await signup(formData.email, formData.password, formData.username);
 
@@ -74,7 +93,10 @@ const SignUpPage = () => {
                     </div>
 
                     {error && <p>{error}</p>}
-                    <button type="submit">
+                    <button 
+                        type="submit"
+                        disabled={loading}
+                    >
                         {loading ? 'creating account...' : 'create'}
                     </button>
                 </form>

@@ -62,7 +62,10 @@ const LoginPage = () => {
 
                     { error && <p>{error}</p> }
 
-                    <button type="submit">
+                    <button 
+                        type="submit"
+                        disabled={loading}
+                    >
                         {loading ? 'logging in...' : 'log in'}
                     </button>
                 </form>
