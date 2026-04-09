@@ -29,7 +29,6 @@ This creates four quadrants:
 - 🚺**User Settings**: Changing the user's username, password and deleting their account
 - 🔄 **Multiple View Modes**: Toggle between scatter plot and grid views
 - ♿ **Accessible Design**: Simple slider mode for users who prefer not to use coordinate clicking
-- 📱 **Responsive Design**: Optimized for desktop with mobile support
 
 ### Coming Soon (Phase 2)
 
@@ -38,6 +37,7 @@ This creates four quadrants:
 - 🔍 Media search and discovery
 - 🪄 Separate plots based on media type (books, shows, movies, etc)
 - 🎭 Rewatch tracking to see how opinions evolve
+- 📱 **Responsive Design**: Optimized for desktop with mobile support
 
 ## 🚀 Quick Start
 
@@ -105,7 +105,7 @@ PlotThePlot-Demo/
 ├── assets/                # Contains images
 ├── frontend/              # Contains React + Typescript frontend
 │   ├── src/               # frontend files ( ratings, hooks, media, pages, styling  )
-│   │   ├── App.tsx        # Routes for now
+│   │   ├── App.tsx        # Public and Private routes
 │   │   └── ...
 │   └── ...
 ```
@@ -128,81 +128,7 @@ Progress is tracked using Notion workspace and documented in regular sprint retr
 
 ## 🤝 Contributing
 
-This is currently a personal learning project, but feedback and suggestions are welcome! 
-
-### Potential Contribution Areas
-
-- UI/UX improvements
-- Accessibility enhancements  
-- Performance optimizations
-- Bug reports and fixes
-- Feature suggestions
-
-Please open an issue to discuss any significant changes before submitting a pull request.
-
-## 📝 API Documentation
-
-### Mock API Endpoints
-
-**Get all users:**
-```
-GET  http://localhost:3001/api/users
-```
-
-**Get a specific user**
-
-```
-GET  http://localhost:3001/api/users/:id
-```
-
-**Modify a user**
-
-```
-PUT http://localhost:3001/api/users/:id
-
-{
-    "username": "newUser",
-    "email": "newUser@email.com",
-    "profile_picture": "new_profile_picture" 
-}
-```
-
-**Delete a user**
-```
-DELETE http://localhost:3001/api/users/:id
-```
-
-**Get all ratings for a user:**
-```
-GET http://localhost:3001/api/users/:id/ratings
-```
-
-**Modify a user's ratings**
-```
-PUT http://localhost:3001/api/users/:userId/ratings/:ratingId
-
-{
-    "x_coordinate": x, # An integer between -1 and 1
-    "y_coordinate": y, # An integer between -1 and 1
-    "good_reason": "good reason",
-    "like_reason": "like reason",
-    "context": "new context",
-}
-```
-**Get all media**
-```
-GET http://localhost:3001/api/media
-```
-
-**Get a specific media:**
-```
-GET http://localhost:3001/api/media/:id
-```
-
-**Get all ratings for a specific media**
-```
-GET 'http://localhost:3001/api/media/:id/ratings'
-```
+This is currently a personal learning project, but feedback and suggestions are welcome!
 
 ## 📊 The Down Low of PTP
 
@@ -210,10 +136,12 @@ GET 'http://localhost:3001/api/media/:id/ratings'
 - **Solution**: Two-dimensional rating system separates quality from personal enjoyment
 
 ### For Individual Users
+
 - **Problem**: Forgot why you rated something a certain way months later?
 - **Solution**: Context capture preserves your authentic reaction and reasoning
 
 ### For Creators
+
 - **Problem**: Binary success/failure metrics don't explain *why* something worked or didn't
 - **Solution**: Aggregate coordinate data reveals nuanced audience sentiment
 
@@ -223,7 +151,8 @@ GET 'http://localhost:3001/api/media/:id/ratings'
 ## 🧠 Inspiration & Context
 
 PlotThePlot emerged from frustration with oversimplified rating systems and the observation that we often:
-- Love objectively bad media (guilty pleasures)
+
+- Love objectively bad media
 - Respect but don't enjoy critically acclaimed works
 - Forgetting our own authentic reactions after social media's influence
 - Struggle to articulate *why* we felt a certain way
@@ -237,6 +166,7 @@ All Rights Reserved.
 ## 👤 Author
 
 **Temi Ajayi**
+
 - GitHub: [@limiajayi](https://github.com/limiajayi)
 - Project Link: [PlotThePlot Demo](https://github.com/limiajayi/PlotThePlot-demo)
 
@@ -246,7 +176,5 @@ All Rights Reserved.
 - Built as a learning project to master React, TypeScript, D3.js, and full-stack development
 
 ---
-
-**Note**: This is currently a working demo using mock data. Production version with real backend coming soon!
 
 *Built with ❤️ and way too many opinions about shows, movies and books*
