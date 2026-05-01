@@ -2,10 +2,6 @@
 
 A media rating platform that captures the complexity of how we actually experience art and stories.
 
-![A two-dimensional scatter plot showing movies and books positioned on an X-Y coordinate grid. The horizontal axis represents quality, while the vertical axis represents personal enjoyment. Various media titles are plotted as points across the graph, with some clustered in the upper right quadrant (high quality, high enjoyment) and others scattered throughout other regions.](/assets/PTP-1.png)
-
-![The same two dimensional scatter plot showing more movies and books on an X-Y coordinate grid.](/assets/PTP-2.png)
-
 ## 🌟 What is PlotThePlot?
 
 Traditional rating systems force us to collapse complex feelings into oversimplified metrics (⭐⭐⭐⭐). PlotThePlot uses a **two-dimensional coordinate system** that separates "quality" from "personal enjoyment":
@@ -19,8 +15,6 @@ This creates four quadrants:
 - **Overhated** (bad + liked): Objectively flawed in every way but you enjoy them anyway.
 - **Overhated** (good + didn't like): Technically excellent but didn't connect.
 - **Under** (bad + didn't like): Neither well-made nor enjoyable.
-
-![PlotThePlot render of the 2D graph with my own ratings](/assets/PTP-4.png)
 
 ## ✨ Key Features
 
