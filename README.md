@@ -1,8 +1,8 @@
-# PlotThePlot 📊🎬
+# PlotThePlot
 
 A media rating platform that captures the complexity of how we actually experience art and stories.
 
-## 🌟 What is PlotThePlot?
+## What is PlotThePlot?
 
 Traditional rating systems force us to collapse complex feelings into oversimplified metrics (⭐⭐⭐⭐). PlotThePlot uses a **two-dimensional coordinate system** that separates "quality" from "personal enjoyment":
 
@@ -16,24 +16,24 @@ This creates four quadrants:
 - **Overhated** (good + didn't like): Technically excellent but didn't connect.
 - **Under** (bad + didn't like): Neither well-made nor enjoyable.
 
-## ✨ Key Features
+## Key Features
 
 ### Currently Developing (Phase 1)
 
-- 🚺**User Settings**: Changing the user's username, password and deleting their account
-- 🔄 **Multiple View Modes**: Toggle between scatter plot and grid views
-- ♿ **Accessible Design**: Simple slider mode for users who prefer not to use coordinate clicking
+- **User Settings**: Changing the user's username, password and deleting their account
+- **Multiple View Modes**: Toggle between scatter plot and grid views
+- **Accessible Design**: Simple slider mode for users who prefer not to use coordinate clicking
 
 ### Coming Soon (Phase 2)
 
-- 👥 Social features and friend comparisons
-- 📈 Aggregate coordinates showing community consensus
-- 🔍 Media search and discovery
-- 🪄 Separate plots based on media type (books, shows, movies, etc)
-- 🎭 Rewatch tracking to see how opinions evolve
-- 📱 **Responsive Design**: Optimized for desktop with mobile support
+- Social features and friend comparisons
+- Aggregate coordinates showing community consensus
+- Media search and discovery
+- Separate plots based on media type (books, shows, movies, etc)
+- Rewatch tracking to see how opinions evolve
+- **Responsive Design**: Optimized for desktop with mobile support
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -64,7 +64,7 @@ npm run dev
 npm run dev
 ```
 
-## 🏗️ Tech Stack
+## Tech Stack
 
 ### Frontend
 
@@ -86,7 +86,7 @@ npm run dev
 - **ESLint & Prettier** for code quality
 - **Git** for version control
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
 PlotThePlot-Demo/
@@ -104,7 +104,7 @@ PlotThePlot-Demo/
 │   └── ...
 ```
 
-## 🎨 Design Philosophy
+## Design Philosophy
 
 PlotThePlot is built on several core principles:
 
@@ -114,17 +114,17 @@ PlotThePlot is built on several core principles:
 4. **Accessibility First**: Complex features should never exclude users who prefer simpler interactions
 5. **Data Integrity**: Preserve authentic first reactions before social influence
 
-## 🛠️ Development Approach
+## Development Approach
 
 This project follows **Agile methodology** with weekly sprints:
 
 Progress is tracked using Notion workspace and documented in regular sprint retrospectives.
 
-## 🤝 Contributing
+## Contributing
 
 This is currently a personal learning project, but feedback and suggestions are welcome!
 
-## 📊 The Down Low of PTP
+## The Down Low of PTP
 
 - **Problem**: Traditional ratings don't capture the "guilty pleasure" vs "prestigious bore" distinction
 - **Solution**: Two-dimensional rating system separates quality from personal enjoyment
@@ -142,7 +142,7 @@ This is currently a personal learning project, but feedback and suggestions are 
 - **Problem**: No way to identify "technically good but audience isn't connecting" scenarios
 - **Solution**: Quadrant clustering shows when craft exceeds engagement (or vice versa)
 
-## 🧠 Inspiration & Context
+## Inspiration & Context
 
 PlotThePlot emerged from frustration with oversimplified rating systems and the observation that we often:
 
@@ -153,22 +153,22 @@ PlotThePlot emerged from frustration with oversimplified rating systems and the 
 
 The coordinate system provides vocabulary for these complex experiences while creating data rich enough to reveal patterns such as personal taste, genre fatigue, and cultural trends.
 
-## 📄 License
+## License
 
 All Rights Reserved.
 
-## 👤 Author
+## Author
 
 **Temi Ajayi**
 
 - GitHub: [@limiajayi](https://github.com/limiajayi)
 - Project Link: [PlotThePlot Demo](https://github.com/limiajayi/PlotThePlot-demo)
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Inspired by conversations with my parents and [@jothamsl](https://github.com/jothamsl) about media criticism and the limitations of star ratings
 - Built as a learning project to master React, TypeScript, D3.js, and full-stack development
 
 ---
 
-*Built with ❤️ and way too many opinions about shows, movies and books*
+*Built with love and way too many opinions about shows, movies and books*
