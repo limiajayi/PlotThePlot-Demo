@@ -27,6 +27,33 @@ body {
   --font-body: 'DM Sans', sans-serif;
   --font-mono: 'DM Mono', monospace;
 
+  /* semantic vars for SettingsPage */
+  --text: #242424;
+  --text-secondary: #666666;
+  --bg: #f5f3ee;
+  --surface: #fafaf8;
+  --border: #e0e0e0;
+  --border-hover: #d0d0d0;
+
+  /* primary */
+  --primary: #94a7f3;
+  --primary-dark: #2040a0;
+  --primary-alpha-10: rgba(148, 167, 243, 0.1);
+  --primary-alpha-20: rgba(148, 167, 243, 0.2);
+
+  /* error */
+  --error: #ffa5a5;
+  --error-dark: #8a2020;
+  --error-bg: #ffe8e8;
+  --error-bg-subtle: #fff5f5;
+  --error-border: #ffb3b3;
+  --error-alpha-20: rgba(255, 165, 165, 0.2);
+
+  /* success */
+  --success: #94fd9d;
+  --success-bg: #e8f5e9;
+  --success-border: #66bb6a;
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
