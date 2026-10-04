@@ -76,7 +76,6 @@
 
 /* danger section  */
 .dangerSection {
-    composes: section;
     border-color: var(--error-border);
     background-color: var(--error-bg-subtle);
 }
