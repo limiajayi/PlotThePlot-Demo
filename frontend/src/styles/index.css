@@ -1,32 +1,59 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap");
 
 body {
-  margin: 0;
+    margin: 0;
 }
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
 
-  /* color-scheme: light dark; */
-  color:  #242424;
-  background: var(--bg, #f5f3ee);
+    /* color-scheme: light dark; */
+    color: #242424;
+    background: var(--bg, #f5f3ee);
 
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 
-  --green: #94fd9d;
-  --orange: #fec789;
-  --blue: #94a7f3;
-  --red: #ffa5a5;
+    --green: #94fd9d;
+    --orange: #fec789;
+    --blue: #94a7f3;
+    --red: #ffa5a5;
 
-  --green-dark:  #2d7a35;
-  --orange-dark: #8a5a10;
-  --blue-dark:   #2040a0;
-  --red-dark:    #8a2020;
+    --green-dark: #2d7a35;
+    --orange-dark: #8a5a10;
+    --blue-dark: #2040a0;
+    --red-dark: #8a2020;
 
-  --font-body: 'DM Sans', sans-serif;
-  --font-mono: 'DM Mono', monospace;
+    --font-body: "DM Sans", sans-serif;
+    --font-mono: "DM Mono", monospace;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
+    /* semantic vars for SettingsPage */
+    --text: #242424;
+    --text-secondary: #666666;
+    --bg: #f5f3ee;
+    --surface: #fafaf8;
+    --border: #e0e0e0;
+    --border-hover: #d0d0d0;
+
+    /* primary */
+    --primary: #9062e6;
+    --primary-dark: #714dab;
+    --primary-alpha-10: rgba(148, 167, 243, 0.1);
+    --primary-alpha-20: rgba(148, 167, 243, 0.2);
+
+    /* error */
+    --error: #fe4c4c;
+    --error-dark: #a04646;
+    --error-bg: #fff9f9;
+    --error-bg-subtle: #fff5f5;
+    --error-border: #c19b9b;
+    --error-alpha-20: rgba(255, 165, 165, 0.2);
+
+    /* success */
+    --success: #94fd9d;
+    --success-bg: #e8f5e9;
+    --success-border: #66bb6a;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
 }
