@@ -1,0 +1,26 @@
+{
+  "name": "PlotThePlot",
+  "version": "1.0.0",
+  "description": "A web app for visualizing your relationship with media.",
+  "homepage": "https://github.com/limiajayi/PlotThePlot-Demo#readme",
+  "bugs": {
+    "url": "https://github.com/limiajayi/PlotThePlot-Demo/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/limiajayi/PlotThePlot-Demo.git"
+  },
+  "license": "ISC",
+  "author": "Temi Ajayi",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev:web": "cd frontend && npm run dev",
+    "dev:api": "cd backend && npm run dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.15",
+    "lefthook": "^2.1.16"
+  }
+}
