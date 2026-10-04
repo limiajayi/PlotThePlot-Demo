@@ -37,13 +37,13 @@ body {
 
     /* primary */
     --primary: #9062e6;
-    --primary-dark: #2040a0;
+    --primary-dark: #714dab;
     --primary-alpha-10: rgba(148, 167, 243, 0.1);
     --primary-alpha-20: rgba(148, 167, 243, 0.2);
 
     /* error */
     --error: #fe4c4c;
-    --error-dark: #8a2020;
+    --error-dark: #a04646;
     --error-bg: #fff9f9;
     --error-bg-subtle: #fff5f5;
     --error-border: #c19b9b;

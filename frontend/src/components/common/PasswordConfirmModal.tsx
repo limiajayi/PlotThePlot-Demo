@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Modal from "react-modal";
 import { useAuth } from "../../context/useAuth";
+import styles from "../../styles/PasswordConfirmModal.module.css";
 
 type PasswordConfirmModalProps = {
     isOpen: boolean;
@@ -56,42 +57,43 @@ const PasswordConfirmModal = ({
             onRequestClose={handleClose}
             contentLabel="Confirm Password"
             appElement={document.getElementById("root") as HTMLElement}
-            style={{
-                content: {
-                    width: "360px",
-                    height: "fit-content",
-                    margin: "auto",
-                    borderRadius: "8px",
-                    padding: "24px",
-                },
-            }}
+            className={styles.modalContent}
+            overlayClassName={styles.modalOverlay}
         >
-            <h3>Confirm your password</h3>
-            <p>Enter your current password to continue.</p>
+            <div className={styles.container}>
+                <h3 className={styles.title}>Confirm your password</h3>
+                <p className={styles.description}>
+                    Enter your current password to continue.
+                </p>
+                <input
+                    type="password"
+                    value={password}
+                    className={styles.input}
+                    onChange={({ target }) => setPassword(target.value)}
+                    placeholder="••••••••"
+                />
+                {error && <p className={styles.error}>{error}</p>}
 
-            <input
-                type="password"
-                value={password}
-                onChange={({ target }) => setPassword(target.value)}
-                placeholder="••••••••"
-            />
+                <div className={styles.buttonGroup}>
+                    {/* if user's change their mind */}
+                    <button
+                        type="button"
+                        className={styles.cancelButton}
+                        onClick={handleClose}
+                    >
+                        Cancel
+                    </button>
 
-            {error && <p>{error}</p>}
-
-            <div>
-                {/* if user's change their mind */}
-                <button type="button" onClick={handleClose}>
-                    Cancel
-                </button>
-
-                {/* if the password has been changed */}
-                <button
-                    type="button"
-                    onClick={handleConfirm}
-                    disabled={loading || !password.trim()}
-                >
-                    {loading ? "Confirming..." : "Confirm"}
-                </button>
+                    {/* if the password has been changed */}
+                    <button
+                        type="button"
+                        className={styles.confirmButton}
+                        onClick={handleConfirm}
+                        disabled={loading || !password.trim()}
+                    >
+                        {loading ? "Confirming..." : "Confirm"}
+                    </button>
+                </div>
             </div>
         </Modal>
     );
