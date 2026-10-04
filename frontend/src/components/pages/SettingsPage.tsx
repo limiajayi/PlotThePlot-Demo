@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { useAuth } from "../../context/useAuth";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../lib/supabase";
-import PasswordConfirmModal from "../common/PasswordConfirmModal";
+import { useAuth } from "../../context/useAuth";
 import useApi from "../../hooks/useApi";
+import { supabase } from "../../lib/supabase";
+import styles from "../../styles/SettingsPage.module.css";
+import PasswordConfirmModal from "../common/PasswordConfirmModal";
+import SettingsSection from "../common/SettingsSection";
 
 type SectionState = {
     error: string | null;
@@ -52,7 +54,6 @@ const SettingsPage = () => {
     const handleUsernameChange = async () => {
         setUsernameState(defaultSectionState);
 
-        // if the user's username isnt valid
         if (!isValidUsername(newUsername)) {
             setUsernameState((prev) => ({
                 ...prev,
@@ -61,7 +62,6 @@ const SettingsPage = () => {
             return;
         }
 
-        // if the user just picked the same username as before
         if (newUsername === user.username) {
             setUsernameState((prev) => ({
                 ...prev,
@@ -161,23 +161,26 @@ const SettingsPage = () => {
     };
 
     return (
-        <div>
-            <div>
+        <div className={styles.container}>
+            <div className={styles.header}>
                 <button
+                    type="button"
+                    className={styles.backButton}
                     onClick={() => navigate(`users/${user?.username}/profile`)}
                 >
                     Back to profile
                 </button>
-                <h1>Settings</h1>
+                <h1 className={styles.pageTitle}>Settings</h1>
             </div>
 
             {/* ---- username section ---- */}
-            <section>
-                <h2>Change Username</h2>
-                <p>Current username: {user?.username}</p>
-
+            <SettingsSection
+                title="Change Username"
+                description={`Current username: ${user?.username}`}
+            >
                 <input
                     type="text"
+                    className={styles.input}
                     value={newUsername}
                     onChange={({ target }) => {
                         setNewUsername(target.value);
@@ -188,34 +191,42 @@ const SettingsPage = () => {
                     maxLength={50}
                 />
 
-                {usernameState.error && <p>{usernameState.error}</p>}
-                {usernameState.success && <p>Username updated successfully.</p>}
+                {usernameState.error && (
+                    <p className={styles.error}>{usernameState.error}</p>
+                )}
+                {usernameState.success && (
+                    <p className={styles.success}>
+                        Username updated successfully.
+                    </p>
+                )}
 
                 <button
+                    type="button"
+                    className={styles.primaryButton}
                     onClick={handleUsernameChange}
                     disabled={usernameState.loading || !newUsername.trim()}
                 >
                     {usernameState.loading ? "Updating..." : "Update Username"}
                 </button>
-            </section>
+            </SettingsSection>
 
             {/* ---- password section ---- */}
-            <section>
-                <h2>Change Password</h2>
-
+            <SettingsSection title="Change Password">
                 <input
                     type="password"
+                    className={styles.input}
                     value={newPassword}
                     onChange={({ target }) => {
                         setNewPassword(target.value);
                         setPasswordState(defaultSectionState);
                     }}
-                    placeholder="New password"
+                    placeholder="New Password"
                     minLength={8}
                 />
 
                 <input
                     type="password"
+                    className={styles.input}
                     value={confirmPassword}
                     onChange={({ target }) => {
                         setConfirmPassword(target.value);
@@ -225,10 +236,18 @@ const SettingsPage = () => {
                     minLength={8}
                 />
 
-                {passwordState.error && <p>{passwordState.error}</p>}
-                {passwordState.success && <p>Password updated successfully.</p>}
+                {passwordState.error && (
+                    <p className={styles.error}>{passwordState.error}</p>
+                )}
+                {passwordState.success && (
+                    <p className={styles.success}>
+                        Password updated successfully.
+                    </p>
+                )}
 
                 <button
+                    type="button"
+                    className={styles.primaryButton}
                     onClick={handlePasswordConfirmOpen}
                     disabled={
                         !newPassword.trim() ||
@@ -238,56 +257,64 @@ const SettingsPage = () => {
                 >
                     Change Password
                 </button>
-            </section>
+            </SettingsSection>
 
             {/* --- email section --- */}
-            <section>
-                <h2>Change Email</h2>
-                <p>Current email: {user.email}</p>
-
+            <SettingsSection
+                title="Change Email"
+                description={`Current email: ${user.email}`}
+            >
                 <input
                     type="email"
+                    className={styles.input}
                     value={newEmail}
                     onChange={({ target }) => {
                         setNewEmail(target.value);
                         setEmailState(defaultSectionState);
                     }}
-                    placeholder="New email address"
+                    placeholder="New Email Address"
                 />
 
-                {emailState.error && <p>{emailState.error}</p>}
+                {emailState.error && (
+                    <p className={styles.error}>{emailState.error}</p>
+                )}
                 {emailState.success && (
-                    <p>
+                    <p className={styles.success}>
                         Confirmation email sent to {newEmail}. Please check your
                         inbox.
                     </p>
                 )}
 
                 <button
+                    type="button"
+                    className={styles.primaryButton}
                     onClick={handleEmailConfirmOpen}
                     disabled={!newEmail.trim()}
                 >
                     Change Email
                 </button>
-            </section>
+            </SettingsSection>
 
             {/* --- appearance section --- */}
-            <section>
-                <h2>Appearance</h2>
-                <p>Dark mode and accessibility settings coming soon.</p>
-            </section>
+            <SettingsSection title="Appearance">
+                <p className={styles.placeholder}>
+                    Dark mode and accessibility settings coming soon.
+                </p>
+            </SettingsSection>
 
             {/* --- delete account section --- */}
-            <section>
-                <h2>Delete Account</h2>
-                <p>
-                    This will permanently delete your account and all you
-                    ratings. This cannot be undone.
-                </p>
-
-                {deleteState.error && <p>{deleteState.error}</p>}
+            <SettingsSection
+                title="Delete Account"
+                description="This will permanently delete your account and all your ratings. This cannot be undone."
+                danger
+            >
+                {deleteState.error && (
+                    <p className={styles.error}>{deleteState.error}</p>
+                )}
 
                 <button
+                    type="button"
+                    className={styles.dangerButton}
                     onClick={() => {
                         setDeleteState(defaultSectionState);
                         setShowDeleteConfirm(true);
@@ -295,7 +322,7 @@ const SettingsPage = () => {
                 >
                     Delete Account
                 </button>
-            </section>
+            </SettingsSection>
 
             {/* --- password confirm modals --- */}
             <PasswordConfirmModal

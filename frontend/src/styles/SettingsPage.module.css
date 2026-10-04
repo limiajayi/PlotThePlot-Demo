@@ -47,12 +47,12 @@
     transition: border-color 0.2s ease;
 }
 
-.section:hover {
+/* .section:hover {
     margin: 0 0 0.5rem 0;
     font-size: 1.25rem;
     font-weight: 600;
     color: var(--text);
-}
+} */
 
 .sectionTitle {
     margin: 0 0 0.5rem 0;
@@ -76,8 +76,12 @@
 
 /* danger section  */
 .dangerSection {
-    border-color: var(--error-border);
-    background-color: var(--error-bg-subtle);
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: var(--surface);
+    border: 1px solid var(--error-border);
+    border-radius: 8px;
+    transition: border-color 0.2s ease;
 }
 
 .dangerSection:hover {
@@ -92,7 +96,7 @@
 .input {
     padding: 0.75rem;
     border: 1px solid var(--border);
-    border-radius: 4px;
+    border-radius: 10px;
     background-color: var(--bg);
     color: var(--text);
     font-size: 1rem;
@@ -153,7 +157,7 @@
     background-color: var(--primary);
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 10px;
     cursor: pointer;
     font-size: 1rem;
     font-weight: 500;
