@@ -9,14 +9,13 @@ type SectionState = {
     error: string | null;
     success: boolean;
     loading: boolean;
-}
+};
 
 const defaultSectionState = {
     error: null,
     success: false,
-    loading: false
-}
-
+    loading: false,
+};
 
 const SettingsPage = () => {
     const { user, updateUser, logout } = useAuth();
@@ -24,17 +23,21 @@ const SettingsPage = () => {
     const api = useApi();
 
     // --- input values ---
-    const [newUsername, setNewUsername] = useState('');
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [newEmail, setNewEmail] = useState('');
+    const [newUsername, setNewUsername] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [newEmail, setNewEmail] = useState("");
 
     // --- section states ---
-    const [usernameState, setUsernameState] = useState<SectionState>(defaultSectionState);
-    const [passwordState, setPasswordState] = useState<SectionState>(defaultSectionState);
-    const [emailState, setEmailState] = useState<SectionState>(defaultSectionState);
-    const [deleteState, setDeleteState] = useState<SectionState>(defaultSectionState);
-    
+    const [usernameState, setUsernameState] =
+        useState<SectionState>(defaultSectionState);
+    const [passwordState, setPasswordState] =
+        useState<SectionState>(defaultSectionState);
+    const [emailState, setEmailState] =
+        useState<SectionState>(defaultSectionState);
+    const [deleteState, setDeleteState] =
+        useState<SectionState>(defaultSectionState);
+
     // --- modal states ---
     const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
     const [showEmailConfirm, setShowEmailConfirm] = useState(false);
@@ -43,103 +46,129 @@ const SettingsPage = () => {
     if (!user) return null;
 
     // --- username ---
-    const isValidUsername = (username: string) => /^[a-zA-Z0-9_-]{7,20}$/.test(username);
+    const isValidUsername = (username: string) =>
+        /^[a-zA-Z0-9_-]{7,20}$/.test(username);
 
     const handleUsernameChange = async () => {
         setUsernameState(defaultSectionState);
 
         // if the user's username isnt valid
         if (!isValidUsername(newUsername)) {
-            setUsernameState(prev => ({...prev, error: 'Username must be 7-50 characters and only contain letters, numbers, underscores or hyphens.'}));
+            setUsernameState((prev) => ({
+                ...prev,
+                error: "Username must be 7-50 characters and only contain letters, numbers, underscores or hyphens.",
+            }));
             return;
         }
 
         // if the user just picked the same username as before
         if (newUsername === user.username) {
-            setUsernameState(prev => ({...prev, error: 'This is already your username.'}));
+            setUsernameState((prev) => ({
+                ...prev,
+                error: "This is already your username.",
+            }));
             return;
         }
 
-        setUsernameState(prev => ({...prev, loading: true}));
+        setUsernameState((prev) => ({ ...prev, loading: true }));
 
         const { data: existing } = await supabase
-        .from('users')
-        .select('id')
-        .eq('username', newUsername)
-        .single();
+            .from("users")
+            .select("id")
+            .eq("username", newUsername)
+            .single();
 
         if (existing) {
-            setUsernameState({ error: 'This username is already taken.', success: false, loading: false });
+            setUsernameState({
+                error: "This username is already taken.",
+                success: false,
+                loading: false,
+            });
             return;
         }
 
         const { error } = await supabase
-        .from('users')
-        .update({ username: newUsername })
-        .eq('id', user.id);
+            .from("users")
+            .update({ username: newUsername })
+            .eq("id", user.id);
 
         if (error) {
             console.log(error);
-            setUsernameState({ error: 'Failed to update username. Please try again.', success: false, loading: false });
+            setUsernameState({
+                error: "Failed to update username. Please try again.",
+                success: false,
+                loading: false,
+            });
             return;
         }
 
         updateUser({ username: newUsername });
         setUsernameState({ error: null, success: true, loading: false });
-        setNewUsername('');
+        setNewUsername("");
         navigate(`/users/${newUsername}/settings`, { replace: true });
-
-    }
+    };
 
     // --- password ---
 
-    const isValidPassword = (password: string) => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/.test(password);
+    const isValidPassword = (password: string) =>
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/.test(
+            password,
+        );
 
     const handlePasswordConfirmOpen = () => {
         setPasswordState(defaultSectionState);
 
         if (!isValidPassword(newPassword)) {
-            setPasswordState(prev => ({
+            setPasswordState((prev) => ({
                 ...prev,
-                error: 'Password must be at least 8 characters and include an uppercase letter, lowercase letter, number and special character.'
+                error: "Password must be at least 8 characters and include an uppercase letter, lowercase letter, number and special character.",
             }));
             return;
         }
 
         if (newPassword !== confirmPassword) {
-            setPasswordState(prev => ({ ...prev, error: 'Passwords do not match.' }));
+            setPasswordState((prev) => ({
+                ...prev,
+                error: "Passwords do not match.",
+            }));
             return;
         }
 
         setShowPasswordConfirm(true);
-    }
+    };
 
     // --- email ---
     const handleEmailConfirmOpen = () => {
         setEmailState(defaultSectionState);
 
         if (!newEmail.trim()) {
-            setEmailState(prev => ({...prev, error: 'Please enter a new email address.'}));
+            setEmailState((prev) => ({
+                ...prev,
+                error: "Please enter a new email address.",
+            }));
             return;
         }
 
         if (newEmail === user.email) {
-            setEmailState(prev => ({ ...prev, error: 'This is already your email address.' }));
+            setEmailState((prev) => ({
+                ...prev,
+                error: "This is already your email address.",
+            }));
             return;
         }
 
         setShowEmailConfirm(true);
-
-    }
+    };
 
     return (
         <div>
             <div>
-                <button onClick={() => navigate(`users/${user?.username}/profile`)}>
+                <button
+                    onClick={() => navigate(`users/${user?.username}/profile`)}
+                >
                     Back to profile
                 </button>
                 <h1>Settings</h1>
-
             </div>
 
             {/* ---- username section ---- */}
@@ -147,8 +176,8 @@ const SettingsPage = () => {
                 <h2>Change Username</h2>
                 <p>Current username: {user?.username}</p>
 
-                <input 
-                    type="text" 
+                <input
+                    type="text"
                     value={newUsername}
                     onChange={({ target }) => {
                         setNewUsername(target.value);
@@ -166,16 +195,15 @@ const SettingsPage = () => {
                     onClick={handleUsernameChange}
                     disabled={usernameState.loading || !newUsername.trim()}
                 >
-                    {usernameState.loading ? 'Updating...' : 'Update Username'}
+                    {usernameState.loading ? "Updating..." : "Update Username"}
                 </button>
-
             </section>
 
             {/* ---- password section ---- */}
             <section>
                 <h2>Change Password</h2>
 
-                <input 
+                <input
                     type="password"
                     value={newPassword}
                     onChange={({ target }) => {
@@ -186,7 +214,7 @@ const SettingsPage = () => {
                     minLength={8}
                 />
 
-                <input 
+                <input
                     type="password"
                     value={confirmPassword}
                     onChange={({ target }) => {
@@ -202,11 +230,14 @@ const SettingsPage = () => {
 
                 <button
                     onClick={handlePasswordConfirmOpen}
-                    disabled={!newPassword.trim() || !confirmPassword.trim() || passwordState.loading}
+                    disabled={
+                        !newPassword.trim() ||
+                        !confirmPassword.trim() ||
+                        passwordState.loading
+                    }
                 >
                     Change Password
                 </button>
-
             </section>
 
             {/* --- email section --- */}
@@ -214,8 +245,8 @@ const SettingsPage = () => {
                 <h2>Change Email</h2>
                 <p>Current email: {user.email}</p>
 
-                <input 
-                    type="email" 
+                <input
+                    type="email"
                     value={newEmail}
                     onChange={({ target }) => {
                         setNewEmail(target.value);
@@ -225,7 +256,12 @@ const SettingsPage = () => {
                 />
 
                 {emailState.error && <p>{emailState.error}</p>}
-                {emailState.success && <p>Confirmation email sent to {newEmail}. Please check your inbox.</p>}
+                {emailState.success && (
+                    <p>
+                        Confirmation email sent to {newEmail}. Please check your
+                        inbox.
+                    </p>
+                )}
 
                 <button
                     onClick={handleEmailConfirmOpen}
@@ -233,7 +269,6 @@ const SettingsPage = () => {
                 >
                     Change Email
                 </button>
-
             </section>
 
             {/* --- appearance section --- */}
@@ -243,66 +278,79 @@ const SettingsPage = () => {
             </section>
 
             {/* --- delete account section --- */}
-                <section>
-                    <h2>Delete Account</h2>
-                    <p>This will permanently delete your account and all you ratings. This cannot be undone.</p>
+            <section>
+                <h2>Delete Account</h2>
+                <p>
+                    This will permanently delete your account and all you
+                    ratings. This cannot be undone.
+                </p>
 
-                    {deleteState.error && <p>{deleteState.error}</p>}
+                {deleteState.error && <p>{deleteState.error}</p>}
 
-                    <button
-                        onClick={() => {
-                            setDeleteState(defaultSectionState);
-                            setShowDeleteConfirm(true);
-                        }}
-                    >
-                        Delete Account
-                    </button>
-
-                </section>
-
-                {/* --- password confirm modals --- */}
-                <PasswordConfirmModal
-                    isOpen={showPasswordConfirm}
-                    onClose={() => setShowPasswordConfirm(false)}
-                    onConfirmed={async () => {
-                        const { error } = await supabase.auth.updateUser({ password: newPassword });
-                        if (error) throw new Error(error.message);
-                        setPasswordState({ error: null, success: true, loading: false });
-                        setNewPassword('');
-                        setConfirmPassword('');
+                <button
+                    onClick={() => {
+                        setDeleteState(defaultSectionState);
+                        setShowDeleteConfirm(true);
                     }}
-                />
+                >
+                    Delete Account
+                </button>
+            </section>
 
-                <PasswordConfirmModal 
-                    isOpen={showEmailConfirm}
-                    onClose={() => setShowEmailConfirm(false)}
-                    onConfirmed={async () => {
-                        const { error: authError } = await supabase.auth.updateUser({ email: newEmail });
-                        if (authError) throw new Error(authError.message);
+            {/* --- password confirm modals --- */}
+            <PasswordConfirmModal
+                isOpen={showPasswordConfirm}
+                onClose={() => setShowPasswordConfirm(false)}
+                onConfirmed={async () => {
+                    const { error } = await supabase.auth.updateUser({
+                        password: newPassword,
+                    });
+                    if (error) throw new Error(error.message);
+                    setPasswordState({
+                        error: null,
+                        success: true,
+                        loading: false,
+                    });
+                    setNewPassword("");
+                    setConfirmPassword("");
+                }}
+            />
 
-                        const { error: dbError } = await supabase
-                        .from('users')
+            <PasswordConfirmModal
+                isOpen={showEmailConfirm}
+                onClose={() => setShowEmailConfirm(false)}
+                onConfirmed={async () => {
+                    const { error: authError } = await supabase.auth.updateUser(
+                        { email: newEmail },
+                    );
+                    if (authError) throw new Error(authError.message);
+
+                    const { error: dbError } = await supabase
+                        .from("users")
                         .update({ email: newEmail })
-                        .eq('id', user.id);
+                        .eq("id", user.id);
 
-                        if (dbError) throw new Error(dbError.message);
+                    if (dbError) throw new Error(dbError.message);
 
-                        updateUser({ email: newEmail });
-                        setEmailState({ error: null, success: true, loading: false });
-                        setNewEmail('');
-                    }}
-                />
+                    updateUser({ email: newEmail });
+                    setEmailState({
+                        error: null,
+                        success: true,
+                        loading: false,
+                    });
+                    setNewEmail("");
+                }}
+            />
 
-                <PasswordConfirmModal 
-                    isOpen={showDeleteConfirm}
-                    onClose={() => setShowDeleteConfirm(false)}
-                    onConfirmed={async () => {
-                        await api.users.deleteAccount(user.id);
-                        await logout();
-                        navigate('/login', { replace: true });
-                    }}
-                />
-
+            <PasswordConfirmModal
+                isOpen={showDeleteConfirm}
+                onClose={() => setShowDeleteConfirm(false)}
+                onConfirmed={async () => {
+                    await api.users.deleteAccount(user.id);
+                    await logout();
+                    navigate("/login", { replace: true });
+                }}
+            />
         </div>
     );
 };
