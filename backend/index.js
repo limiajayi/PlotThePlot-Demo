@@ -1,5 +1,4 @@
 require("dotenv").config();
-const { supabase } = require("./lib/supabase");
 const express = require("express");
 const app = express();
 const usersRouter = require("./routes/users");
@@ -8,17 +7,6 @@ const ratingsRouter = require("./routes/ratings");
 const mediaSearchRouter = require("./routes/mediaSearch");
 const cors = require("cors");
 const { requestLogger } = require("./middleware/logger");
-
-//middleware for me to see what each request looks like
-//when testing with Postman
-// const requestLogger = (request, response, next) => {
-//     console.log("Method:", request.method);
-//     console.log("Path:  ", request.path);
-//     console.log("Header: ", request.headers);
-//     console.log("Body:  ", request.body);
-//     console.log("---");
-//     next();
-// };
 
 // helps to convert the request body into a JSON format
 app.use(express.json());
