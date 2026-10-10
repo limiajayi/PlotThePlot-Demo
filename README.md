@@ -168,7 +168,3 @@ All Rights Reserved.
 
 - Inspired by conversations with my parents and [@jothamsl](https://github.com/jothamsl) about media criticism and the limitations of star ratings
 - Built as a learning project to master React, TypeScript, D3.js, and full-stack development
-
----
-
-*Built with love and way too many opinions about shows, movies and books*
