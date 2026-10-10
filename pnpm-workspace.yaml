@@ -1,0 +1,11 @@
+packages:
+  - "frontend"
+  - "backend"
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  lefthook: true
+  unrs-resolver: true
+minimumReleaseAge: 1440  # 1  day
+overrides:
+  "argparse@^1.0.7": "2.0.1"
