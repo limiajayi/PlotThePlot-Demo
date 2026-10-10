@@ -48,10 +48,9 @@ router.delete(
     requireAuth,
     requireSelf("id"),
     async (request, response) => {
-        if (request.userId !== request.params.id) {
-            console.log("Not allowed to take this action.");
-            return response.status(403).json({ error: "Forbidden" });
-        }
+        // if (request.userId !== request.params.id) {
+        //     return response.status(403).json({ error: "Forbidden" });
+        // }
 
         const id = request.params.id;
 

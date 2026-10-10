@@ -4,7 +4,6 @@ const requireAuth = async (request, response, next) => {
     const authHeader = request.headers.authorization;
 
     if (!authHeader?.startsWith("Bearer ")) {
-        console.log("Missing auth token in header");
         return response.status(401).json({ error: "Missing auth token" });
     }
 
