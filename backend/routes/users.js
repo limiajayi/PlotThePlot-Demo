@@ -2,15 +2,22 @@ const { supabase } = require("../lib/supabase");
 const { requireAuth } = require("../middleware/auth");
 const express = require("express");
 const { requireSelf } = require("../middleware/requireSelf");
+const {
+    USER_PUBLIC_COLUMNS,
+    RATING_COLUMNS,
+    MEDIA_COLUMNS,
+} = require("../lib/columns");
 const router = express.Router();
 
 //USERS
+
+const PUBLIC_USER_SELECT = `${USER_PUBLIC_COLUMNS}, ratings(${RATING_COLUMNS}, media (${MEDIA_COLUMNS}))`;
 
 //API endpoint to get all users
 router.get("/", async (request, response) => {
     const { data, error } = await supabase
         .from("users")
-        .select("*, ratings (*, media (*))")
+        .select(`${PUBLIC_USER_SELECT}`)
         .range(0, 5);
 
     if (error) {
@@ -28,7 +35,7 @@ router.get("/:id", async (request, response) => {
     const id = request.params.id;
     const { data, error } = await supabase
         .from("users")
-        .select("*, ratings (*, media (*))")
+        .select(`${PUBLIC_USER_SELECT}`)
         .eq("id", id)
         .single();
 
