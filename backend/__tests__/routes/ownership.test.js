@@ -2,7 +2,6 @@ const request = require("supertest");
 const express = require("express");
 const ratingsRouter = require("../../routes/ratings");
 const usersRouter = require("../../routes/users");
-const { error } = require("node:console");
 const { beforeEach, afterEach } = require("node:test");
 
 const mockTokens = { "token-a": "user-a", "token-b": "user-b" };
@@ -63,7 +62,7 @@ app.use("/api", ratingsRouter);
 const asUserA = { Authorization: "Bearer token-a" };
 const asUserB = { Authorization: "Bearer token-b" };
 
-const stub = beforeEach(() => {
+beforeEach(() => {
     mockDbCalls.length = 0;
     jest.spyOn(console, "log").mockImplementation();
 });
@@ -143,7 +142,7 @@ describe("GIVEN user B is logged in and targets user A's data", () => {
 
     it("WHEN user B attempts to delete user A's account", async () => {
         const response = await request(app)
-            .delete("/api/users/useer-a")
+            .delete("/api/users/user-a")
             .set(asUserB);
 
         const body = JSON.parse(response.text);
@@ -155,4 +154,44 @@ describe("GIVEN user B is logged in and targets user A's data", () => {
     });
 });
 
-describe("GIVEN user A is logged in and targets their own data", () => {});
+describe("GIVEN user A is logged in and targets their own data", () => {
+    it("WHEN user A delete their own rating", async () => {
+        const response = await request(app)
+            .delete("/api/users/user-a/ratings/1")
+            .set(asUserA);
+
+        // THEN it succeeds and the delete query is run
+        expect(response.status).toBe(204);
+        expect(mockDbCalls).toContain("delete");
+    });
+
+    it("WHEN user A edits their own rating", async () => {
+        const response = await request(app)
+            .put("/api/users/user-a/ratings/1")
+            .set(asUserA)
+            .send({ good_reason: "a", like_reason: "a" });
+
+        //THEN it succeeds and the update query is ran
+        expect(response.status).toBe(200);
+        expect(mockDbCalls).toContain("update");
+    });
+
+    it("WHEN user A posts an empty rating", async () => {
+        const response = await request(app)
+            .post("/api/users/user-a/ratings")
+            .set(asUserA)
+            .send({});
+
+        // THEN they get passed the ownership check and are stopped by validation
+        expect(response.status).toBe(400);
+    });
+
+    it("WHEN user A deletes their own account", async () => {
+        const response = await request(app)
+            .delete("/api/users/user-a")
+            .set(asUserA);
+
+        expect(response.status).toBe(204);
+        expect(mockDbCalls).toContain("deleteUser:user-a");
+    });
+});

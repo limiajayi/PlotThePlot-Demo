@@ -245,7 +245,6 @@ router.delete(
             .select("*");
 
         if (error && !data) {
-            console.log(`Error deleting this rating ${error.message}`);
             return response
                 .status(500)
                 .json({ error: `Error deleting rating: ${error.message}` });

@@ -42,16 +42,11 @@ router.get("/:id", async (request, response) => {
     response.json(data);
 });
 
-//API endpoint to delete a user
 router.delete(
     "/:id",
     requireAuth,
     requireSelf("id"),
     async (request, response) => {
-        // if (request.userId !== request.params.id) {
-        //     return response.status(403).json({ error: "Forbidden" });
-        // }
-
         const id = request.params.id;
 
         const { error } = await supabase.auth.admin.deleteUser(id);
