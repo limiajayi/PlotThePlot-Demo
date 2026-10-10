@@ -154,3 +154,5 @@ describe("GIVEN user B is logged in and targets user A's data", () => {
         expect(body.error).toBe("Forbidden");
     });
 });
+
+describe("GIVEN user A is logged in and targets their own data", () => {});
